@@ -91,156 +91,130 @@ export const RelaxationPopup = ({ isOpen, onClose, duration = 180 }: RelaxationP
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-gradient-to-br from-indigo-900/95 via-purple-900/95 to-pink-900/95 backdrop-blur-md flex items-center justify-center z-50 p-4 animate-fadeIn">
-      {/* Background animated circles */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl animate-pulse"></div>
-        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }}></div>
-        <div className="absolute top-1/2 left-1/2 w-96 h-96 bg-pink-500/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '2s' }}></div>
-      </div>
-
-      <div className="relative bg-white/10 backdrop-blur-xl border border-white/20 rounded-3xl shadow-2xl max-w-2xl w-full p-8 animate-scaleIn">
+    <div className="fixed inset-0 bg-white/95 dark:bg-black/95 backdrop-blur-md flex items-center justify-center z-50 overflow-hidden animate-fadeIn">
+      <div className="relative bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl shadow-2xl max-w-4xl w-full mx-4 p-6 animate-scaleIn">
         {/* Header */}
-        <div className="text-center mb-8">
-          <div className="text-7xl mb-4 animate-bounce">🧘</div>
-          <h2 className="text-5xl font-bold text-white mb-3 drop-shadow-lg">
+        <div className="text-center mb-6">
+          <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
             Nghỉ Thư Giãn
           </h2>
-          <p className="text-xl text-white/80">
+          <p className="text-base text-gray-600 dark:text-gray-400">
             Hãy thả lỏng cơ thể và hít thở sâu
           </p>
         </div>
 
-        {/* Timer Display - Larger Circle */}
-        <div className="text-center mb-12">
-          <div className="inline-block relative">
-            {/* Circular progress - Bigger size */}
-            <svg className="w-72 h-72 transform -rotate-90">
-              <circle
-                cx="144"
-                cy="144"
-                r="132"
-                stroke="rgba(255, 255, 255, 0.15)"
-                strokeWidth="12"
-                fill="none"
-              />
-              <circle
-                cx="144"
-                cy="144"
-                r="132"
-                stroke="url(#gradient)"
-                strokeWidth="12"
-                fill="none"
-                strokeDasharray={`${2 * Math.PI * 132}`}
-                strokeDashoffset={`${2 * Math.PI * 132 * (1 - progress / 100)}`}
-                strokeLinecap="round"
-                className="transition-all duration-1000"
-              />
-              <defs>
-                <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                  <stop offset="0%" stopColor="#60a5fa" />
-                  <stop offset="50%" stopColor="#a78bfa" />
-                  <stop offset="100%" stopColor="#ec4899" />
-                </linearGradient>
-              </defs>
-            </svg>
-            
-            {/* Time in center */}
-            <div className="absolute inset-0 flex flex-col items-center justify-center">
-              <div className="text-8xl font-bold text-white drop-shadow-2xl">
-                {formatTime(timeRemaining)}
-              </div>
-              <div className="text-lg text-white/70 mt-2 font-medium tracking-wide">còn lại</div>
-            </div>
-          </div>
-        </div>
-
-        {/* Breathing Animation - Improved Design */}
-        <div className="text-center mb-10">
-          <div className="relative inline-flex flex-col items-center justify-center gap-6">
-            {/* Breathing bubble */}
-            <div className="relative w-40 h-40">
-              {/* Main bubble with glow effect */}
-              <div className="absolute inset-0 bg-gradient-to-br from-blue-400/50 to-purple-500/50 rounded-full animate-breatheBubble shadow-2xl blur-sm"></div>
-              {/* Middle layer */}
-              <div className="absolute inset-3 bg-gradient-to-br from-blue-300/70 to-purple-400/70 rounded-full animate-breatheBubble shadow-xl" style={{ animationDelay: '0.15s' }}></div>
-              {/* Inner layer */}
-              <div className="absolute inset-6 bg-gradient-to-br from-blue-200/80 to-purple-300/80 rounded-full animate-breatheBubble shadow-lg" style={{ animationDelay: '0.3s' }}></div>
-              {/* Core */}
-              <div className="absolute inset-10 bg-gradient-to-br from-white/90 to-blue-100/90 rounded-full animate-breatheBubble" style={{ animationDelay: '0.45s' }}></div>
-            </div>
-            
-            {/* Breathing instruction text - Beautiful typography */}
-            <div className="flex flex-col items-center gap-2">
-              <div className="flex items-center gap-3">
-                <div className="w-2 h-2 bg-blue-400 rounded-full animate-breatheText"></div>
-                <span className="text-white text-2xl font-light tracking-wider animate-breatheText">
-                  Hít vào
-                </span>
-                <div className="text-white/40 text-2xl">•</div>
-                <span className="text-white text-2xl font-light tracking-wider animate-breatheText">
-                  Thở ra
-                </span>
-                <div className="w-2 h-2 bg-purple-400 rounded-full animate-breatheText"></div>
-              </div>
-              <div className="text-white/50 text-sm font-light tracking-widest uppercase">
-                Đều đặn và chậm rãi
+        {/* Main Content - Horizontal Layout */}
+        <div className="flex items-center gap-8 mb-6">
+          {/* Left: Timer Display */}
+          <div className="flex-shrink-0">
+            <div className="relative w-48 h-48 flex items-center justify-center">
+              {/* Circular progress - Smaller size */}
+              <svg className="absolute w-48 h-48 transform -rotate-90">
+                <circle
+                  cx="96"
+                  cy="96"
+                  r="88"
+                  stroke="currentColor"
+                  className="text-gray-200 dark:text-gray-800"
+                  strokeWidth="8"
+                  fill="none"
+                />
+                <circle
+                  cx="96"
+                  cy="96"
+                  r="88"
+                  stroke="currentColor"
+                  className="text-teal-500 dark:text-cyan-500 transition-all duration-1000"
+                  strokeWidth="8"
+                  fill="none"
+                  strokeDasharray={`${2 * Math.PI * 88}`}
+                  strokeDashoffset={`${2 * Math.PI * 88 * (1 - progress / 100)}`}
+                  strokeLinecap="round"
+                />
+              </svg>
+              
+              {/* Time in center */}
+              <div className="flex flex-col items-center justify-center z-10">
+                <div className="text-5xl font-bold text-gray-900 dark:text-white">
+                  {formatTime(timeRemaining)}
+                </div>
+                <div className="text-sm text-gray-600 dark:text-gray-400 mt-1 font-medium">còn lại</div>
               </div>
             </div>
           </div>
-        </div>
 
-        {/* Relaxation Tips */}
-        <div className="bg-white/10 rounded-2xl p-6 mb-6 border border-white/20">
-          <h3 className="text-white font-semibold text-lg mb-3 flex items-center gap-2">
-            <span>💡</span>
-            <span>Hướng dẫn thư giãn:</span>
-          </h3>
-          <ul className="space-y-2 text-white/80">
-            <li className="flex items-start gap-2">
-              <span className="text-blue-400">•</span>
-              <span>Ngồi hoặc nằm ở tư thế thoải mái</span>
-            </li>
-            <li className="flex items-start gap-2">
-              <span className="text-purple-400">•</span>
-              <span>Hít thở sâu và đều đặn</span>
-            </li>
-            <li className="flex items-start gap-2">
-              <span className="text-pink-400">•</span>
-              <span>Thả lỏng tất cả các cơ trong cơ thể</span>
-            </li>
-            <li className="flex items-start gap-2">
-              <span className="text-indigo-400">•</span>
-              <span>Đóng mắt và tập trung vào hơi thở</span>
-            </li>
-          </ul>
+          {/* Right: Breathing Animation and Tips */}
+          <div className="flex-1 space-y-6">
+            {/* Breathing Animation */}
+            <div className="flex items-center gap-6">
+              {/* Breathing bubble - smaller */}
+              <div className="relative w-24 h-24 flex-shrink-0">
+                <div className="absolute inset-0 bg-teal-500/50 dark:bg-cyan-500/50 rounded-full animate-breatheBubble shadow-xl blur-sm"></div>
+                <div className="absolute inset-2 bg-teal-400/70 dark:bg-cyan-400/70 rounded-full animate-breatheBubble shadow-lg" style={{ animationDelay: '0.15s' }}></div>
+                <div className="absolute inset-4 bg-teal-300/80 dark:bg-cyan-300/80 rounded-full animate-breatheBubble" style={{ animationDelay: '0.3s' }}></div>
+                <div className="absolute inset-6 bg-white/90 dark:bg-gray-800/90 rounded-full animate-breatheBubble" style={{ animationDelay: '0.45s' }}></div>
+              </div>
+              
+              {/* Breathing instruction */}
+              <div className="flex flex-col gap-2">
+                <div className="flex items-center gap-2">
+                  <div className="w-1.5 h-1.5 bg-teal-500 dark:bg-cyan-500 rounded-full animate-breatheText"></div>
+                  <span className="text-gray-900 dark:text-white text-lg font-light tracking-wide animate-breatheText">
+                    Hít vào
+                  </span>
+                  <span className="text-gray-400">•</span>
+                  <span className="text-gray-900 dark:text-white text-lg font-light tracking-wide animate-breatheText">
+                    Thở ra
+                  </span>
+                  <div className="w-1.5 h-1.5 bg-teal-500 dark:bg-cyan-500 rounded-full animate-breatheText"></div>
+                </div>
+                <div className="text-gray-600 dark:text-gray-400 text-xs font-light tracking-widest uppercase">
+                  Đều đặn và chậm rãi
+                </div>
+              </div>
+            </div>
+
+            {/* Relaxation Tips */}
+            <div className="bg-gray-100 dark:bg-gray-800 rounded-xl p-4 border border-gray-200 dark:border-gray-700">
+              <h3 className="text-gray-900 dark:text-white font-semibold text-base mb-2">
+                Hướng dẫn thư giãn:
+              </h3>
+              <ul className="space-y-1.5 text-sm text-gray-700 dark:text-gray-300">
+                <li className="flex items-start gap-2">
+                  <span className="text-teal-500 dark:text-cyan-500">•</span>
+                  <span>Ngồi hoặc nằm ở tư thế thoải mái</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-teal-500 dark:text-cyan-500">•</span>
+                  <span>Hít thở sâu và đều đặn</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-teal-500 dark:text-cyan-500">•</span>
+                  <span>Thả lỏng tất cả các cơ trong cơ thể</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-teal-500 dark:text-cyan-500">•</span>
+                  <span>Đóng mắt và tập trung vào hơi thở</span>
+                </li>
+              </ul>
+            </div>
+          </div>
         </div>
 
         {/* Control Buttons */}
-        <div className="flex gap-4">
+        <div className="flex gap-3">
           <button
             onClick={toggleMusic}
-            className="flex-1 bg-white/20 hover:bg-white/30 backdrop-blur-sm border border-white/30 text-white font-semibold py-4 px-6 rounded-xl transition flex items-center justify-center gap-2"
+            className="flex-1 bg-gray-200 dark:bg-gray-800 hover:bg-gray-300 dark:hover:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white font-semibold py-3 px-4 rounded-xl transition flex items-center justify-center gap-2"
           >
-            {isPlaying ? (
-              <>
-                <span className="text-2xl">🔊</span>
-                <span>Tắt Nhạc</span>
-              </>
-            ) : (
-              <>
-                <span className="text-2xl">🔇</span>
-                <span>Bật Nhạc</span>
-              </>
-            )}
+            {isPlaying ? 'Tắt Nhạc' : 'Bật Nhạc'}
           </button>
           
           <button
             onClick={skipRelaxation}
-            className="flex-1 bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white font-bold py-4 px-6 rounded-xl transition shadow-lg flex items-center justify-center gap-2"
+            className="flex-1 bg-teal-500 dark:bg-cyan-500 hover:bg-teal-600 dark:hover:bg-cyan-600 text-white font-bold py-3 px-4 rounded-xl transition shadow-lg flex items-center justify-center gap-2"
           >
-            <span className="text-2xl">⏭️</span>
-            <span>Bỏ Qua</span>
+            Bỏ Qua
           </button>
         </div>
 

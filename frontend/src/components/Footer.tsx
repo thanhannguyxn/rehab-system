@@ -42,7 +42,7 @@ const Footer: React.FC = () => {
         {/* Copyright - Separate Bottom Section */}
         <div className="pt-4 border-t border-gray-200 dark:border-gray-700 text-center">
           <p className="text-sm text-gray-600 dark:text-gray-400">
-            © {currentYear} Rehabilitation System. All rights reserved.
+            © {currentYear} Rehab AI. All rights reserved.
           </p>
         </div>
       </div>

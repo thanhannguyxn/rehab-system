@@ -36,27 +36,24 @@ export const Navbar = () => {
           
           {/* Navigation Links */}
           <div className="hidden md:flex space-x-8 items-center">
-            {/* Trang Chủ - Chỉ hiện khi đã đăng nhập */}
-            {user && (
-              <Link to="/" className={getLinkClasses('/')}>
-                Trang Chủ
-              </Link>
-            )}
-            
-            {user && (
+            {user && user.role === 'patient' && (
               <>
+                <Link to="/" className={getLinkClasses('/')}>
+                  Trang Chủ
+                </Link>
                 <Link to="/exercise" className={getLinkClasses('/exercise')}>
                   Bài Tập
                 </Link>
                 <Link to="/history" className={getLinkClasses('/history')}>
                   Lịch Sử
                 </Link>
-                {user.role === 'doctor' && (
-                  <Link to="/dashboard" className={getLinkClasses('/dashboard')}>
-                    Dashboard
-                  </Link>
-                )}
               </>
+            )}
+            
+            {user && user.role === 'doctor' && (
+              <Link to="/dashboard" className={getLinkClasses('/dashboard')}>
+                Dashboard
+              </Link>
             )}
           </div>
 
