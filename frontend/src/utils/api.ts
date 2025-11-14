@@ -23,10 +23,11 @@ api.interceptors.request.use((config) => {
 // ============= AUTH APIs =============
 
 export const authAPI = {
-  async login(username: string, password: string): Promise<LoginResponse> {
+  async login(username: string, password: string, role: string): Promise<LoginResponse> {
     const response = await axios.post(`${API_URL}/auth/login`, {
       username,
       password,
+      role,
     });
     return response.data;
   },

@@ -8,9 +8,16 @@ import sys
 from pathlib import Path
 from datetime import datetime
 import os
+import subprocess
+import mysql.connector
+from mysql.connector import Error
 
-DB_PATH = Path("rehab_v3.db")
-
+DB_CONFIG = {
+    "host": "localhost",
+    "user": "root",
+    "password": "password",
+    "database": "rehab_v3"
+}
 def clear_screen():
     os.system('cls' if os.name == 'nt' else 'clear')
 
@@ -20,11 +27,12 @@ def print_header(title):
     print("=" * 80 + "\n")
 
 def connect_db():
-    if not DB_PATH.exists():
-        print(f"❌ Database not found: {DB_PATH}")
-        print("   Run 'python main.py' first to create the database.")
+    try:
+        conn = mysql.connector.connect(**DB_CONFIG)
+        return conn
+    except Error as e:
+        print(f"❌ Cannot connect to MySQL: {e}")
         sys.exit(1)
-    return sqlite3.connect(DB_PATH)
 
 def view_all_tables():
     """Show all tables in database"""
@@ -32,14 +40,15 @@ def view_all_tables():
     cursor = conn.cursor()
     
     print_header("📊 All Tables in Database")
-    cursor.execute("SELECT name FROM sqlite_master WHERE type='table' ORDER BY name")
+    cursor.execute("SELECT table_name FROM information_schema.tables WHERE table_schema = %s ORDER BY table_name", (DB_CONFIG['database'],))
     tables = cursor.fetchall()
     
     for i, (table_name,) in enumerate(tables, 1):
-        cursor.execute(f"SELECT COUNT(*) FROM {table_name}")
+        cursor.execute(f"SELECT COUNT(*) FROM `{table_name}`")
         count = cursor.fetchone()[0]
         print(f"  {i}. {table_name:<30} ({count} rows)")
     
+    cursor.close()
     conn.close()
     input("\n👉 Press Enter to continue...")
 
@@ -64,7 +73,7 @@ def view_users():
         gender_str = gender or 'N/A'
         created_str = created[:10] if created else 'N/A'
         print(f"{user_id:<5} {username:<15} {role:<10} {full_name or 'N/A':<25} {age_str:<5} {gender_str:<10} {created_str:<20}")
-    
+    cursor.close()
     conn.close()
     input("\n👉 Press Enter to continue...")
 
@@ -94,6 +103,7 @@ def view_sessions():
         duration_min = f"{duration//60}m" if duration else '0m'
         print(f"{sid:<5} {username:<15} {name_str:<20} {ex_str:<20} {date_str:<12} {total:<8} {correct:<8} {acc:<6.1f} {duration_min:<8}")
     
+    cursor.close()
     conn.close()
     input("\n👉 Press Enter to continue...")
 
@@ -118,7 +128,7 @@ def view_session_errors():
     for row in cursor.fetchall():
         exercise, error, total, sessions = row
         print(f"{exercise:<30} {error:<30} {total:<15} {sessions:<10}")
-    
+    cursor.close()
     conn.close()
     input("\n👉 Press Enter to continue...")
 
@@ -141,6 +151,7 @@ def delete_user():
         user_id = input("\n👉 Enter user ID to delete (or 0 to cancel): ").strip()
         if user_id == '0':
             print("❌ Cancelled.")
+            cursor.close()
             conn.close()
             input("\n👉 Press Enter to continue...")
             return
@@ -148,11 +159,12 @@ def delete_user():
         user_id = int(user_id)
         
         # Get user info
-        cursor.execute("SELECT username, role FROM users WHERE id = ?", (user_id,))
+        cursor.execute("SELECT username, role FROM users WHERE id = %s", (user_id,))
         user = cursor.fetchone()
         
         if not user:
             print(f"❌ User with ID {user_id} not found.")
+            cursor.close()
             conn.close()
             input("\n👉 Press Enter to continue...")
             return
@@ -163,16 +175,18 @@ def delete_user():
         confirm = input(f"\n⚠️ Delete user '{username}' ({role}) and ALL their data? (yes/no): ").strip().lower()
         if confirm != 'yes':
             print("❌ Cancelled.")
+            cursor.close()
+
             conn.close()
             input("\n👉 Press Enter to continue...")
             return
         
         # Delete sessions and errors first
-        cursor.execute("DELETE FROM session_errors WHERE session_id IN (SELECT id FROM sessions WHERE patient_id = ?)", (user_id,))
-        cursor.execute("DELETE FROM session_frames WHERE session_id IN (SELECT id FROM sessions WHERE patient_id = ?)", (user_id,))
-        cursor.execute("DELETE FROM sessions WHERE patient_id = ?", (user_id,))
-        cursor.execute("DELETE FROM user_exercise_limits WHERE user_id = ?", (user_id,))
-        cursor.execute("DELETE FROM users WHERE id = ?", (user_id,))
+        cursor.execute("DELETE FROM session_errors WHERE session_id IN (SELECT id FROM sessions WHERE patient_id = %s)", (user_id,))
+        cursor.execute("DELETE FROM session_frames WHERE session_id IN (SELECT id FROM sessions WHERE patient_id = %s)", (user_id,))
+        cursor.execute("DELETE FROM sessions WHERE patient_id = %s", (user_id,))
+        cursor.execute("DELETE FROM user_exercise_limits WHERE user_id = %s", (user_id,))
+        cursor.execute("DELETE FROM users WHERE id = %s", (user_id,))
         
         conn.commit()
         print(f"✅ User '{username}' and all related data deleted successfully!")
@@ -183,6 +197,7 @@ def delete_user():
         print(f"❌ Error: {e}")
         conn.rollback()
     
+    cursor.close()
     conn.close()
     input("\n👉 Press Enter to continue...")
 
@@ -214,6 +229,7 @@ def delete_session():
         session_id = input("\n👉 Enter session ID to delete (or 0 to cancel): ").strip()
         if session_id == '0':
             print("❌ Cancelled.")
+            cursor.close()
             conn.close()
             input("\n👉 Press Enter to continue...")
             return
@@ -224,14 +240,15 @@ def delete_session():
         confirm = input(f"\n⚠️ Delete session {session_id}? (yes/no): ").strip().lower()
         if confirm != 'yes':
             print("❌ Cancelled.")
+            cursor.close()
             conn.close()
             input("\n👉 Press Enter to continue...")
             return
         
         # Delete
-        cursor.execute("DELETE FROM session_errors WHERE session_id = ?", (session_id,))
-        cursor.execute("DELETE FROM session_frames WHERE session_id = ?", (session_id,))
-        cursor.execute("DELETE FROM sessions WHERE id = ?", (session_id,))
+        cursor.execute("DELETE FROM session_errors WHERE session_id = %s", (session_id,))
+        cursor.execute("DELETE FROM session_frames WHERE session_id = %s", (session_id,))
+        cursor.execute("DELETE FROM sessions WHERE id = %s", (session_id,))
         
         conn.commit()
         print(f"✅ Session {session_id} deleted successfully!")
@@ -242,6 +259,7 @@ def delete_session():
         print(f"❌ Error: {e}")
         conn.rollback()
     
+    cursor.close()
     conn.close()
     input("\n👉 Press Enter to continue...")
 
@@ -262,6 +280,7 @@ def clear_all_sessions():
     confirm = input("\n👉 Type 'DELETE ALL' to confirm: ").strip()
     if confirm != 'DELETE ALL':
         print("❌ Cancelled.")
+        cursor.close()
         conn.close()
         input("\n👉 Press Enter to continue...")
         return
@@ -276,6 +295,7 @@ def clear_all_sessions():
         print(f"❌ Error: {e}")
         conn.rollback()
     
+    cursor.close()
     conn.close()
     input("\n👉 Press Enter to continue...")
 
@@ -284,13 +304,23 @@ def backup_database():
     print_header("💾 Backup Database")
     
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    backup_path = f"rehab_v3_backup_{timestamp}.db"
+    backup_path = f"rehab_v3_backup_{timestamp}.sql"
     
+    host = DB_CONFIG['host']
+    user = DB_CONFIG['user']
+    password = DB_CONFIG['ducanh']
+    database = DB_CONFIG['database']
+    
+    # Try mysqldump
+    cmd = f'mysqldump -h {host} -u {user} -p{password} {database} > "{backup_path}"'
     try:
-        import shutil
-        shutil.copy2(DB_PATH, backup_path)
-        print(f"✅ Backup created: {backup_path}")
-        print(f"   Size: {Path(backup_path).stat().st_size / 1024:.2f} KB")
+        res = subprocess.run(cmd, shell=True)
+        if res.returncode == 0:
+            size_kb = Path(backup_path).stat().st_size / 1024
+            print(f"✅ Backup created: {backup_path}")
+            print(f"   Size: {size_kb:.2f} KB")
+        else:
+            print("❌ mysqldump failed or not available. Ensure mysqldump is in PATH.")
     except Exception as e:
         print(f"❌ Backup failed: {e}")
     
@@ -315,14 +345,19 @@ def show_database_stats():
     cursor.execute("SELECT SUM(total_reps) FROM sessions")
     total_reps = cursor.fetchone()[0] or 0
     cursor.execute("SELECT AVG(accuracy) FROM sessions")
-    avg_accuracy = cursor.fetchone()[0] or 0
+    avg_accuracy = cursor.fetchone()[0] or 0.0
     
     # Errors
     cursor.execute("SELECT COUNT(*) FROM session_errors")
     error_count = cursor.fetchone()[0]
     
-    # Database size
-    db_size = DB_PATH.stat().st_size / 1024  # KB
+     # Database size in KB (data + index)
+    cursor.execute("""
+        SELECT IFNULL(SUM(data_length + index_length) / 1024, 0)
+        FROM information_schema.TABLES
+        WHERE table_schema = %s
+    """, (DB_CONFIG['database'],))
+    db_size = cursor.fetchone()[0] or 0.0
     
     print(f"👥 Users:")
     print(f"   - Patients: {patient_count}")
@@ -337,10 +372,10 @@ def show_database_stats():
     print(f"\n⚠️ Errors:")
     print(f"   - Total error records: {error_count}")
     
-    print(f"\n💾 Database:")
-    print(f"   - File: {DB_PATH}")
+    print(f"\n💾 Database: {DB_CONFIG['database']}")
     print(f"   - Size: {db_size:.2f} KB")
     
+    cursor.close()
     conn.close()
     input("\n👉 Press Enter to continue...")
 
@@ -386,6 +421,7 @@ def execute_custom_query():
         print(f"❌ Error: {e}")
         conn.rollback()
     
+    cursor.close()
     conn.close()
     input("\n👉 Press Enter to continue...")
 

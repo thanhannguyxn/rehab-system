@@ -1,7 +1,14 @@
-import sqlite3
+import mysql.connector
+from mysql.connector import Error
 
-conn = sqlite3.connect('rehab_v3.db')
-cursor = conn.cursor()
+DB_CONFIG = {
+    "host": "localhost",
+    "user": "root",
+    "password": "password",
+    "database": "rehab_v3"
+}
+conn = mysql.connector.connect(**DB_CONFIG)
+cursor = conn.cursor(dictionary=True)
 
 cursor.execute('SELECT id, exercise_name, total_reps, correct_reps, accuracy FROM sessions ORDER BY id DESC LIMIT 5')
 print('\n📊 Last 5 sessions in database:')

@@ -5,7 +5,7 @@ import type { User } from '../types';
 interface AuthContextType {
   user: User | null;
   isLoading: boolean;
-  login: (username: string, password: string) => Promise<void>;
+  login: (username: string, password: string, role: string) => Promise<void>;
   logout: () => void;
 }
 
@@ -33,8 +33,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     setIsLoading(false);
   }, []);
 
-  const login = async (username: string, password: string) => {
-    const response = await authAPI.login(username, password);
+  const login = async (username: string, password: string, role: string) => {
+    const response = await authAPI.login(username, password, role);
     
     localStorage.setItem('token', response.token);
     localStorage.setItem('user', JSON.stringify(response.user));

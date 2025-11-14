@@ -9,6 +9,7 @@ from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 import cv2
+import mysql.connector
 import mediapipe as mp
 import numpy as np
 import base64
@@ -30,7 +31,12 @@ from ai_models import PersonalizationEngine, BiometricFeatures
 # Config
 SECRET_KEY = "your-secret-key-change-in-production"
 ALGORITHM = "HS256"
-DB_PATH = Path("rehab_v3.db")
+DB_CONFIG = {
+    "host": "localhost",
+    "user": "root", # use your MySQL username
+    "password": "ducanh", # use your MySQL password
+    "database": "rehab_v3"
+    }
 
 # Initialize AI Personalization Engine
 personalization_engine = PersonalizationEngine()
@@ -103,30 +109,30 @@ def hash_password(password: str) -> str:
 
 def init_db():
     """Initialize database with complete schema"""
-    conn = sqlite3.connect(DB_PATH)
+    conn = mysql.connector.connect(**DB_CONFIG)
     cursor = conn.cursor()
     
     # Users table
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS users (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            username TEXT UNIQUE NOT NULL,
-            password_hash TEXT NOT NULL,
-            role TEXT NOT NULL CHECK(role IN ('patient', 'doctor')),
-            full_name TEXT,
-            age INTEGER,
-            gender TEXT CHECK(gender IN ('male', 'female', 'other')),
+            id INT PRIMARY KEY AUTO_INCREMENT,
+            username VARCHAR(255) UNIQUE NOT NULL,
+            password_hash VARCHAR(255) NOT NULL,
+            role VARCHAR(32) NOT NULL CHECK(role IN ('patient', 'doctor')),
+            full_name VARCHAR(255),
+            age INT,
+            gender VARCHAR(16) CHECK(gender IN ('male', 'female', 'other')),
             height_cm REAL,
             weight_kg REAL,
             bmi REAL,
             medical_conditions TEXT,
             injury_type TEXT,
-            mobility_level TEXT CHECK(mobility_level IN ('beginner', 'intermediate', 'advanced')),
-            pain_level INTEGER CHECK(pain_level BETWEEN 0 AND 10),
+            mobility_level VARCHAR(32) CHECK(mobility_level IN ('beginner', 'intermediate', 'advanced')),
+            pain_level INT CHECK(pain_level BETWEEN 0 AND 10),
             doctor_notes TEXT,
             contraindicated_exercises TEXT,
-            created_at TEXT NOT NULL,
-            doctor_id INTEGER,
+            created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+            doctor_id INT,
             FOREIGN KEY (doctor_id) REFERENCES users(id)
         )
     """)
@@ -134,7 +140,7 @@ def init_db():
     # Sessions table
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS sessions (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            id INTEGER PRIMARY KEY AUTO_INCREMENT,
             patient_id INTEGER NOT NULL,
             exercise_name TEXT NOT NULL,
             start_time TEXT NOT NULL,
@@ -152,7 +158,7 @@ def init_db():
     # Session frames table
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS session_frames (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            id INTEGER PRIMARY KEY AUTO_INCREMENT,
             session_id INTEGER NOT NULL,
             timestamp TEXT NOT NULL,
             rep_count INTEGER,
@@ -165,7 +171,7 @@ def init_db():
     # Errors table (aggregated)
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS session_errors (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            id INTEGER PRIMARY KEY AUTO_INCREMENT,
             session_id INTEGER NOT NULL,
             error_name TEXT NOT NULL,
             count INTEGER DEFAULT 0,
@@ -177,7 +183,7 @@ def init_db():
     # User exercise limits table (AI personalization)
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS user_exercise_limits (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            id INTEGER PRIMARY KEY AUTO_INCREMENT,
             user_id INTEGER NOT NULL,
             exercise_type TEXT NOT NULL,
             max_depth_angle REAL,
@@ -200,7 +206,7 @@ def init_db():
         # Default doctor
         cursor.execute("""
             INSERT INTO users (username, password_hash, role, full_name, created_at)
-            VALUES (?, ?, ?, ?, ?)
+            VALUES (%s, %s, %s, %s, %s)
         """, ('doctor1', hash_password('doctor123'), 'doctor', 'BS. Nguyễn Văn A', datetime.now().isoformat()))
         
         doctor_id = cursor.lastrowid
@@ -214,7 +220,7 @@ def init_db():
         for username, password, name, age, gender in patients:
             cursor.execute("""
                 INSERT INTO users (username, password_hash, role, full_name, age, gender, created_at, doctor_id)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+                VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
             """, (username, hash_password(password), 'patient', name, age, gender, datetime.now().isoformat(), doctor_id))
         
         conn.commit()
@@ -229,6 +235,7 @@ init_db()
 class LoginRequest(BaseModel):
     username: str
     password: str
+    role: str  # 'patient' or 'doctor'
 
 class RegisterRequest(BaseModel):
     username: str
@@ -339,7 +346,7 @@ class AngleCalculator:
                     landmarks[mp_pose.PoseLandmark.RIGHT_WRIST]
                 ),
             }
-        # ✅ THÊM MỚI: single_leg_stand
+        # THÊM MỚI: single_leg_stand
         elif exercise_type == "single_leg_stand":
             # GÓC KNEE FLEXION (gập gối): HIP -> KNEE -> ANKLE
             left_knee_flexion = AngleCalculator.calculate_angle(
@@ -385,7 +392,7 @@ class AngleCalculator:
 
             return angles
 
-        # ✅ THÊM MỚI: calf_raise
+        # THÊM MỚI: calf_raise
         elif exercise_type == "calf_raise":
             # Tính góc mắt cá chân (ankle)
             left_ankle_angle = AngleCalculator.calculate_angle(
@@ -442,7 +449,7 @@ class ExerciseState(Enum):
     RAISING = "raising"
     UP = "up"
     LOWERING = "lowering"
-    # ✅ THÊM MỚI cho single_leg_stand
+    # THÊM MỚI cho single_leg_stand
     READY = "ready"
     LIFTING = "lifting"
     HOLDING = "holding"
@@ -462,7 +469,7 @@ class RepetitionCounter:
 
         self.last_state_change = time.time()
 
-        # ✅ REP-BASED ERROR TRACKING
+        # REP-BASED ERROR TRACKING
         self.current_rep_errors = set()  # Lỗi trong rep hiện tại (unique)
         self.all_rep_errors = []  # Danh sách lỗi của tất cả reps: [[errors_rep1], [errors_rep2], ...]
         self.rep_completed = False  # Flag để track khi rep hoàn thành
@@ -509,8 +516,8 @@ class RepetitionCounter:
         """Called when a rep is completed - save errors for this rep"""
         self.rep_count += 1
         self.all_rep_errors.append(list(self.current_rep_errors))
-        print(f"✅ Rep {self.rep_count} completed! Errors in this rep: {list(self.current_rep_errors)}")
-        print(f"   Total all_rep_errors so far: {self.all_rep_errors}")
+        print(f" Rep {self.rep_count} completed! Errors in this rep: {list(self.current_rep_errors)}")
+        print(f" Total all_rep_errors so far: {self.all_rep_errors}")
         self.current_rep_errors.clear()  # Reset for next rep
         self.rep_completed = True
     
@@ -551,7 +558,7 @@ class RepetitionCounter:
         is_correct_position = knee_bent_enough and leg_behind
 
         # Debug information
-        print(f"🎯 {self.current_side.upper()} side:")
+        print(f" {self.current_side.upper()} side:")
         print(f"   Knee Flexion: {knee_flexion:.1f}° ({'✅' if knee_bent_enough else '❌'} <50°)")
         print(f"   Leg Behind: {leg_behind_value:.3f} ({'✅' if leg_behind else '❌'} >0.05)")
         print(f"   Correct Position: {'✅ YES' if is_correct_position else '❌ NO'}")
@@ -590,7 +597,7 @@ class RepetitionCounter:
                     self.state = ExerciseState.LOWERING
                     self.hold_start_time = None
                     self.last_state_change = current_time
-                    print(f"⚠️ Mất tư thế! Knee: {knee_flexion:.1f}°, Leg Behind: {leg_behind_value:.3f}")
+                    print(f" Mất tư thế! Knee: {knee_flexion:.1f}°, Leg Behind: {leg_behind_value:.3f}")
 
                 elif elapsed >= self.hold_duration:
                     # Giữ đủ 10 giây!
@@ -601,10 +608,10 @@ class RepetitionCounter:
                     # Mark side as completed
                     if self.current_side == "left":
                         self.left_completed = True
-                        print("✅ Hoàn thành bên TRÁI!")
+                        print(" Hoàn thành bên TRÁI!")
                     else:
                         self.right_completed = True
-                        print("✅ Hoàn thành bên PHẢI!")
+                        print(" Hoàn thành bên PHẢI!")
 
         elif self.state == ExerciseState.LOWERING:
             # Lowering the leg - đang hạ chân xuống
@@ -614,17 +621,17 @@ class RepetitionCounter:
                 if self.left_completed and self.right_completed:
                     # Both sides done - complete!
                     self.state = ExerciseState.COMPLETE
-                    self._complete_rep()  # ✅ Rep hoàn thành!
+                    self._complete_rep()  #  Rep hoàn thành!
                     self.left_completed = False
                     self.right_completed = False
                     self.last_state_change = current_time
-                    print("🎉 Hoàn thành CẢ 2 BÊN! +1 Rep")
+                    print(" Hoàn thành CẢ 2 BÊN! +1 Rep")
                 else:
                     # Switch to other side
                     self.state = ExerciseState.SWITCH_SIDE
                     self.current_side = "right" if self.current_side == "left" else "left"
                     self.last_state_change = current_time
-                    print(f"🔄 Chuyển sang bên {self.current_side.upper()}")
+                    print(f" Chuyển sang bên {self.current_side.upper()}")
                     
         elif self.state == ExerciseState.SWITCH_SIDE:
             # Wait a moment, then ready for other side
@@ -642,7 +649,7 @@ class RepetitionCounter:
         return self.rep_count
     
     def _count_arm_raise(self, angles):
-        # ✅ YÊU CẦU CẢ 2 TAY - cả 2 tay phải đạt ngưỡng
+        #  YÊU CẦU CẢ 2 TAY - cả 2 tay phải đạt ngưỡng
         left_shoulder = angles.get('left_shoulder', 0)
         right_shoulder = angles.get('right_shoulder', 0)
         # Dùng MIN để đảm bảo CẢ 2 TAY đều đạt ngưỡng (tay thấp nhất phải đủ cao)
@@ -671,7 +678,7 @@ class RepetitionCounter:
         elif self.state == ExerciseState.LOWERING:
             if shoulder_angle < self.down_threshold:
                 self.state = ExerciseState.DOWN
-                self._complete_rep()  # ✅ Rep hoàn thành!
+                self._complete_rep()  #  Rep hoàn thành!
                 self.last_state_change = current_time
             elif shoulder_angle > self.up_threshold:
                 self.state = ExerciseState.UP
@@ -680,7 +687,7 @@ class RepetitionCounter:
         return self.rep_count
     
     def _count_squat(self, angles):
-        # ✅ YÊU CẦU CẢ 2 CHÂN - cả 2 chân phải đạt ngưỡng
+        #  YÊU CẦU CẢ 2 CHÂN - cả 2 chân phải đạt ngưỡng
         left_knee = angles.get('left_knee', 180)
         right_knee = angles.get('right_knee', 180)
         # Dùng MAX để đảm bảo CẢ 2 CHÂN đều gập đủ sâu (chân cao nhất phải đủ thấp)
@@ -709,7 +716,7 @@ class RepetitionCounter:
         elif self.state == ExerciseState.RAISING:
             if knee_angle >= self.down_threshold:
                 self.state = ExerciseState.DOWN
-                self._complete_rep()  # ✅ Rep hoàn thành!
+                self._complete_rep()  #  Rep hoàn thành!
                 self.last_state_change = current_time
             elif knee_angle < self.up_threshold:
                 self.state = ExerciseState.UP
@@ -721,7 +728,7 @@ class RepetitionCounter:
         """State machine for calf raise - YÊU CẦU CẢ 2 CHÂN"""
         left_ankle = angles.get('left_ankle', 90)
         right_ankle = angles.get('right_ankle', 90)
-        # ✅ Dùng MIN để đảm bảo CẢ 2 CHÂN đều nâng đủ cao (chân thấp nhất phải đủ cao)
+        # Dùng MIN để đảm bảo CẢ 2 CHÂN đều nâng đủ cao (chân thấp nhất phải đủ cao)
         ankle_angle = min(left_ankle, right_ankle)
         
         current_time = time.time()
@@ -747,7 +754,7 @@ class RepetitionCounter:
         elif self.state == ExerciseState.LOWERING:
             if ankle_angle <= self.down_threshold:
                 self.state = ExerciseState.DOWN
-                self._complete_rep()  # ✅ Rep hoàn thành!
+                self._complete_rep()  #  Rep hoàn thành!
                 self.last_state_change = current_time
             elif ankle_angle > self.up_threshold:
                 self.state = ExerciseState.UP
@@ -780,7 +787,7 @@ class RepetitionCounter:
         self.left_completed = False
         self.right_completed = False
         self.current_side = "left"
-        # ✅ Reset error tracking
+        #  Reset error tracking
         self.current_rep_errors.clear()
         self.all_rep_errors.clear()
         self.rep_completed = False
@@ -1109,12 +1116,12 @@ class SessionManager:
         self.active_rep_counter: Optional[RepetitionCounter] = None  # ✅ Reference to active rep counter
     
     def start_session(self, patient_id: int, exercise_name: str):
-        conn = sqlite3.connect(DB_PATH)
+        conn = mysql.connector.connect(**DB_CONFIG)
         cursor = conn.cursor()
         
         cursor.execute("""
             INSERT INTO sessions (patient_id, exercise_name, start_time)
-            VALUES (?, ?, ?)
+            VALUES (%s, %s, %s)
         """, (patient_id, exercise_name, datetime.now().isoformat()))
         
         session_id = cursor.lastrowid
@@ -1145,11 +1152,11 @@ class SessionManager:
         if not self.current_session:
             return None
         
-        conn = sqlite3.connect(DB_PATH)
+        conn = mysql.connector.connect(**DB_CONFIG)
         cursor = conn.cursor()
         
         # Get session start time
-        cursor.execute("SELECT start_time FROM sessions WHERE id = ?", (self.current_session['id'],))
+        cursor.execute("SELECT start_time FROM sessions WHERE id = %s", (self.current_session['id'],))
         start_time_str = cursor.fetchone()[0]
         start_time = datetime.fromisoformat(start_time_str)
         
@@ -1192,15 +1199,15 @@ class SessionManager:
         # Update session
         cursor.execute("""
             UPDATE sessions
-            SET end_time = ?, total_reps = ?, correct_reps = ?, accuracy = ?, duration_seconds = ?
-            WHERE id = ?
+            SET end_time = %s, total_reps = %s, correct_reps = %s, accuracy = %s, duration_seconds = %s
+            WHERE id = %s
         """, (end_time.isoformat(), total_reps, correct_reps, accuracy, duration, self.current_session['id']))
         
         # Save error stats (now per-rep counts, not per-frame!)
         for error_name, info in error_counts.items():
             cursor.execute("""
                 INSERT INTO session_errors (session_id, error_name, count, severity)
-                VALUES (?, ?, ?, ?)
+                VALUES (%s, %s, %s, %s)
             """, (self.current_session['id'], error_name, info['count'], info['severity']))
         
         conn.commit()
@@ -1229,12 +1236,12 @@ session_manager = SessionManager()
 
 @app.post("/api/auth/login")
 async def login(request: LoginRequest):
-    conn = sqlite3.connect(DB_PATH)
+    conn = mysql.connector.connect(**DB_CONFIG)
     cursor = conn.cursor()
     
     cursor.execute("""
         SELECT id, username, role, full_name, age, gender, doctor_id
-        FROM users WHERE username = ? AND password_hash = ?
+        FROM users WHERE username = %s AND password_hash = %s
     """, (request.username, hash_password(request.password)))
     
     user = cursor.fetchone()
@@ -1244,6 +1251,13 @@ async def login(request: LoginRequest):
         raise HTTPException(status_code=401, detail="Invalid credentials")
     
     user_id, username, role, full_name, age, gender, doctor_id = user
+
+     # Validate role matches the expected role
+    if role != request.role:
+        raise HTTPException(
+            status_code=403, 
+            detail=f"Tài khoản này là tài khoản {'bác sĩ' if role == 'doctor' else 'bệnh nhân'}. Vui lòng chọn đúng loại tài khoản."
+        )
     
     token = create_token(user_id, username, role)
     
@@ -1263,13 +1277,13 @@ async def login(request: LoginRequest):
 
 @app.post("/api/auth/register")
 async def register(request: RegisterRequest):
-    conn = sqlite3.connect(DB_PATH)
+    conn = mysql.connector.connect(**DB_CONFIG)
     cursor = conn.cursor()
     
     try:
         cursor.execute("""
             INSERT INTO users (username, password_hash, role, full_name, age, gender, created_at, doctor_id)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
         """, (
             request.username,
             hash_password(request.password),
@@ -1295,7 +1309,7 @@ async def register(request: RegisterRequest):
                 'full_name': request.full_name
             }
         }
-    except sqlite3.IntegrityError:
+    except mysql.connector.IntegrityError:
         raise HTTPException(status_code=400, detail="Username already exists")
     finally:
         conn.close()
@@ -1327,15 +1341,15 @@ async def end_session(session_id: int, current_user = Depends(get_current_user))
 
 @app.get("/api/sessions/my-history")
 async def get_my_history(limit: int = 20, current_user = Depends(get_current_user)):
-    conn = sqlite3.connect(DB_PATH)
+    conn = mysql.connector.connect(**DB_CONFIG)
     cursor = conn.cursor()
     
     cursor.execute("""
         SELECT id, exercise_name, start_time, total_reps, correct_reps, accuracy, duration_seconds
         FROM sessions
-        WHERE patient_id = ?
+        WHERE patient_id = %s
         ORDER BY start_time DESC
-        LIMIT ?
+        LIMIT %s
     """, (current_user['user_id'], limit))
 
     sessions = []
@@ -1344,7 +1358,7 @@ async def get_my_history(limit: int = 20, current_user = Depends(get_current_use
         cursor.execute("""
             SELECT error_name, count, severity
             FROM session_errors
-            WHERE session_id = ?
+            WHERE session_id = %s
         """, (row[0],))
 
         errors = [{'name': get_vietnamese_error_name(e[0]), 'count': e[1], 'severity': e[2]} for e in cursor.fetchall()]
@@ -1367,7 +1381,7 @@ async def get_my_history(limit: int = 20, current_user = Depends(get_current_use
 @app.get("/api/sessions/error-analytics")
 async def get_error_analytics(current_user = Depends(get_current_user)):
     """Get error analytics grouped by exercise type"""
-    conn = sqlite3.connect(DB_PATH)
+    conn = mysql.connector.connect(**DB_CONFIG)
     cursor = conn.cursor()
     
     # Get error statistics grouped by exercise type
@@ -1379,7 +1393,7 @@ async def get_error_analytics(current_user = Depends(get_current_user)):
             COUNT(DISTINCT s.id) as session_count
         FROM session_errors se
         JOIN sessions s ON se.session_id = s.id
-        WHERE s.patient_id = ?
+        WHERE s.patient_id = %s
         GROUP BY s.exercise_name, se.error_name
         ORDER BY s.exercise_name, total_count DESC
     """, (current_user['user_id'],))
@@ -1438,13 +1452,13 @@ async def get_my_patients(current_user = Depends(get_current_user)):
     if current_user['role'] != 'doctor':
         raise HTTPException(status_code=403, detail="Doctors only")
     
-    conn = sqlite3.connect(DB_PATH)
+    conn = mysql.connector.connect(**DB_CONFIG)
     cursor = conn.cursor()
     
     cursor.execute("""
         SELECT id, username, full_name, age, gender, created_at
         FROM users
-        WHERE role = 'patient' AND doctor_id = ?
+        WHERE role = 'patient' AND doctor_id = %s
         ORDER BY full_name
     """, (current_user['user_id'],))
     
@@ -1454,7 +1468,7 @@ async def get_my_patients(current_user = Depends(get_current_user)):
         cursor.execute("""
             SELECT start_time, exercise_name, accuracy
             FROM sessions
-            WHERE patient_id = ?
+            WHERE patient_id = %s
             ORDER BY start_time DESC
             LIMIT 1
         """, (row[0],))
@@ -1484,15 +1498,15 @@ async def get_patient_history(patient_id: int, limit: int = 20, current_user = D
     if current_user['role'] != 'doctor':
         raise HTTPException(status_code=403, detail="Doctors only")
     
-    conn = sqlite3.connect(DB_PATH)
+    conn = mysql.connector.connect(**DB_CONFIG)
     cursor = conn.cursor()
     
     cursor.execute("""
         SELECT id, exercise_name, start_time, total_reps, correct_reps, accuracy, duration_seconds
         FROM sessions
-        WHERE patient_id = ?
+        WHERE patient_id = %s
         ORDER BY start_time DESC
-        LIMIT ?
+        LIMIT %s
     """, (patient_id, limit))
     
     sessions = []
@@ -1501,7 +1515,7 @@ async def get_patient_history(patient_id: int, limit: int = 20, current_user = D
         cursor.execute("""
             SELECT error_name, count, severity
             FROM session_errors
-            WHERE session_id = ?
+            WHERE session_id = %s
         """, (row[0],))
         
         errors = [{'name': get_vietnamese_error_name(e[0]), 'count': e[1], 'severity': e[2]} for e in cursor.fetchall()]
@@ -1527,7 +1541,7 @@ async def get_patient_error_analytics(patient_id: int, current_user = Depends(ge
     if current_user['role'] != 'doctor':
         raise HTTPException(status_code=403, detail="Doctors only")
     
-    conn = sqlite3.connect(DB_PATH)
+    conn = mysql.connector.connect(**DB_CONFIG)
     cursor = conn.cursor()
     
     # Get error statistics grouped by exercise type
@@ -1539,7 +1553,7 @@ async def get_patient_error_analytics(patient_id: int, current_user = Depends(ge
             COUNT(DISTINCT s.id) as session_count
         FROM session_errors se
         JOIN sessions s ON se.session_id = s.id
-        WHERE s.patient_id = ?
+        WHERE s.patient_id = %s
         GROUP BY s.exercise_name, se.error_name
         ORDER BY s.exercise_name, total_count DESC
     """, (patient_id,))
@@ -1604,7 +1618,7 @@ async def update_profile(
     token_data = verify_token(credentials)
     user_id = token_data['user_id']
     
-    conn = sqlite3.connect(DB_PATH)
+    conn = mysql.connector.connect(**DB_CONFIG)
     cursor = conn.cursor()
     
     # Calculate BMI if height and weight provided
@@ -1617,40 +1631,40 @@ async def update_profile(
     update_values = []
     
     if request.age is not None:
-        update_fields.append("age = ?")
+        update_fields.append("age = %s")
         update_values.append(request.age)
     
     if request.gender:
-        update_fields.append("gender = ?")
+        update_fields.append("gender = %s")
         update_values.append(request.gender)
     
     if request.height_cm is not None:
-        update_fields.append("height_cm = ?")
+        update_fields.append("height_cm = %s")
         update_values.append(request.height_cm)
     
     if request.weight_kg is not None:
-        update_fields.append("weight_kg = ?")
+        update_fields.append("weight_kg = %s")
         update_values.append(request.weight_kg)
     
     if bmi is not None:
-        update_fields.append("bmi = ?")
+        update_fields.append("bmi = %s")
         update_values.append(bmi)
     
     if request.medical_conditions is not None:
-        update_fields.append("medical_conditions = ?")
+        update_fields.append("medical_conditions = %s")
         update_values.append(request.medical_conditions)
     
     if request.mobility_level:
-        update_fields.append("mobility_level = ?")
+        update_fields.append("mobility_level = %s")
         update_values.append(request.mobility_level)
     
     if request.pain_level is not None:
-        update_fields.append("pain_level = ?")
+        update_fields.append("pain_level = %s")
         update_values.append(request.pain_level)
     
     if update_fields:
         update_values.append(user_id)
-        query = f"UPDATE users SET {', '.join(update_fields)} WHERE id = ?"
+        query = f"UPDATE users SET {', '.join(update_fields)} WHERE id = %s"
         cursor.execute(query, update_values)
         conn.commit()
     
@@ -1669,16 +1683,15 @@ async def get_my_profile(credentials: HTTPAuthorizationCredentials = Depends(sec
     token_data = verify_token(credentials)
     user_id = token_data['user_id']
     
-    conn = sqlite3.connect(DB_PATH)
-    conn.row_factory = sqlite3.Row
-    cursor = conn.cursor()
+    conn = mysql.connector.connect(**DB_CONFIG)
+    cursor = conn.cursor(dictionary=True)
     
     cursor.execute("""
         SELECT id, username, full_name, age, gender, height_cm, weight_kg, bmi,
                medical_conditions, injury_type, mobility_level, pain_level, 
                doctor_notes, contraindicated_exercises, role
         FROM users
-        WHERE id = ?
+        WHERE id = %s
     """, (user_id,))
     
     user = cursor.fetchone()
@@ -1704,15 +1717,14 @@ async def get_personalized_params(
     user_id = token_data['user_id']
     
     # Get user data
-    conn = sqlite3.connect(DB_PATH)
-    conn.row_factory = sqlite3.Row
-    cursor = conn.cursor()
+    conn = mysql.connector.connect(**DB_CONFIG)
+    cursor = conn.cursor(dictionary=True)
     
     cursor.execute("""
         SELECT age, gender, height_cm, weight_kg, bmi, medical_conditions,
                injury_type, mobility_level, pain_level
         FROM users
-        WHERE id = ?
+        WHERE id = %s
     """, (user_id,))
     
     user_row = cursor.fetchone()
@@ -1731,11 +1743,19 @@ async def get_personalized_params(
     
     # Save to database
     cursor.execute("""
-        INSERT OR REPLACE INTO user_exercise_limits
+        INSERT INTO user_exercise_limits
         (user_id, exercise_type, max_depth_angle, min_raise_angle,
          max_reps_per_set, recommended_rest_seconds, difficulty_score,
          injury_risk_score, created_at, updated_at)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+        ON DUPLICATE KEY UPDATE
+        max_depth_angle = VALUES(max_depth_angle),
+        min_raise_angle = VALUES(min_raise_angle),
+        max_reps_per_set = VALUES(max_reps_per_set),
+        recommended_rest_seconds = VALUES(recommended_rest_seconds),
+        difficulty_score = VALUES(difficulty_score),
+        injury_risk_score = VALUES(injury_risk_score),
+        updated_at = VALUES(updated_at)
     """, (
         user_id,
         request.exercise_type,
