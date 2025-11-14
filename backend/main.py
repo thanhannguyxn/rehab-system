@@ -1259,6 +1259,13 @@ async def login(request: LoginRequest):
             detail=f"Tài khoản này là tài khoản {'bác sĩ' if role == 'doctor' else 'bệnh nhân'}. Vui lòng chọn đúng loại tài khoản."
         )
     
+    # Validate role matches the expected role
+    if role != request.role:
+        raise HTTPException(
+            status_code=403, 
+            detail=f"Tài khoản này là tài khoản {'bác sĩ' if role == 'doctor' else 'bệnh nhân'}. Vui lòng chọn đúng loại tài khoản."
+        )
+    
     token = create_token(user_id, username, role)
     
     return {
