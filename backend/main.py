@@ -229,6 +229,7 @@ init_db()
 class LoginRequest(BaseModel):
     username: str
     password: str
+    role: str  # 'patient' or 'doctor'
 
 class RegisterRequest(BaseModel):
     username: str
@@ -1244,6 +1245,13 @@ async def login(request: LoginRequest):
         raise HTTPException(status_code=401, detail="Invalid credentials")
     
     user_id, username, role, full_name, age, gender, doctor_id = user
+    
+    # Validate role matches the expected role
+    if role != request.role:
+        raise HTTPException(
+            status_code=403, 
+            detail=f"Tài khoản này là tài khoản {'bác sĩ' if role == 'doctor' else 'bệnh nhân'}. Vui lòng chọn đúng loại tài khoản."
+        )
     
     token = create_token(user_id, username, role)
     

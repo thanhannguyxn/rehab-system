@@ -22,7 +22,8 @@ export const Login = () => {
     setIsLoading(true);
 
     try {
-      await login(username, password);
+      // Pass the role from URL params to login function
+      await login(username, password, role || 'patient');
       navigate(isDoctor ? '/dashboard' : '/');
     } catch (err: any) {
       setError(err.response?.data?.detail || 'Đăng nhập thất bại. Vui lòng thử lại.');
