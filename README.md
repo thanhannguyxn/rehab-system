@@ -21,6 +21,7 @@ Hệ thống AI phục hồi chức năng hoàn chỉnh cho người cao tuổi 
 ## 🚀 Cài Đặt Nhanh (Windows)
 ### Bước 1: Setup Database
 Change username and password of your MySQL to your own in "check_db.py", "main.py", "manage_db.py" and "migrate_db.py":
+
 DB_CONFIG = {
     "host": "localhost",
     "user": "root", # use your MySQL username
