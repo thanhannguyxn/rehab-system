@@ -33,7 +33,7 @@ export const ExercisePage = () => {
   const [loadingParams, setLoadingParams] = useState(false);
   const [showRelaxation, setShowRelaxation] = useState(false);
   const [showVoiceSettings, setShowVoiceSettings] = useState(false);
-  
+
   // Track last announced rep and error to avoid repetition
   const lastAnnouncedRep = useRef<number>(0);
   const lastErrorAnnounced = useRef<string>('');
@@ -76,7 +76,7 @@ export const ExercisePage = () => {
 
   const loadPersonalizedParams = async () => {
     if (!selectedExercise) return;
-    
+
     setLoadingParams(true);
     try {
       const token = localStorage.getItem('token');
@@ -114,12 +114,12 @@ export const ExercisePage = () => {
       setShowSummary(false);
       setCompletionStatus(null);
       setRemainingTime(currentExercise.duration_seconds);
-      
+
       // Reset voice tracking refs
       lastAnnouncedRep.current = 0;
       lastErrorAnnounced.current = '';
       lastErrorTime.current = 0;
-      
+
       // Voice: Start exercise
       setTimeout(() => {
         voiceService.speak(VoiceMessages.start, true);
@@ -132,10 +132,10 @@ export const ExercisePage = () => {
 
   const handleStop = async (status: 'completed' | 'timeout' | 'manual' = 'manual') => {
     setIsExercising(false);
-    
+
     // Stop voice when exercise stops
     voiceService.stop();
-    
+
     // Reset voice tracking refs
     lastAnnouncedRep.current = 0;
     lastErrorAnnounced.current = '';
@@ -168,7 +168,7 @@ export const ExercisePage = () => {
           const targetReached = currentExercise && analysisData?.rep_count &&
                                 analysisData.rep_count >= currentExercise.target_reps;
           setCompletionStatus(targetReached ? 'completed' : 'timeout');
-          
+
           // Show relaxation if target reached
           if (targetReached) {
             voiceService.speak(VoiceMessages.complete, true);
@@ -209,7 +209,7 @@ export const ExercisePage = () => {
           handleStop('timeout');
           return 0;
         }
-        
+
         // Voice warnings at specific times
         if (prev === 60) {
           voiceService.addToQueue(VoiceMessages.timeRemaining(60));
@@ -218,7 +218,7 @@ export const ExercisePage = () => {
         } else if (prev === 10) {
           voiceService.addToQueue(VoiceMessages.timeRemaining(10));
         }
-        
+
         return prev - 1;
       });
     }, 1000);
@@ -262,7 +262,7 @@ export const ExercisePage = () => {
     if (!isExercising || !analysisData?.rep_count) return;
 
     const currentRep = analysisData.rep_count;
-    
+
     // Announce each rep number only once (when rep changes)
     if (currentRep > 0 && currentRep <= targetReps && currentRep !== lastAnnouncedRep.current) {
       voiceService.speak(`${currentRep}`, false);
@@ -275,17 +275,17 @@ export const ExercisePage = () => {
     if (!isExercising || !analysisData?.feedback) return;
 
     const feedback = analysisData.feedback;
-    
+
     // Only announce errors (feedback that contains warning/error keywords)
     if (feedback && feedback.length > 0) {
       // Get the latest error message
       const latestError = feedback[feedback.length - 1];
       const now = Date.now();
-      
+
       // Only announce if different error or 3 seconds passed since last announcement
       if (latestError !== lastErrorAnnounced.current || now - lastErrorTime.current > 3000) {
         let errorMessage = '';
-        
+
         // Map error keywords to voice warnings (simplified for common errors)
         if (latestError.includes('vai chưa đủ') || latestError.includes('chưa đủ cao')) {
           errorMessage = VoiceMessages.errors.shoulderNotHigh;
@@ -304,7 +304,7 @@ export const ExercisePage = () => {
         } else if (latestError.includes('chân cong') || latestError.includes('leg bent')) {
           errorMessage = VoiceMessages.errors.kneesBent;
         }
-        
+
         if (errorMessage) {
           voiceService.addToQueue(errorMessage);
           lastErrorAnnounced.current = latestError;
@@ -411,7 +411,7 @@ export const ExercisePage = () => {
                     </div>
                   </div>
                 </div>
-                
+
                 {isExercising && (
                   <div className="mt-4 flex items-center">
                     <div className={`w-3 h-3 rounded-full ${isConnected ? 'bg-green-500' : 'bg-red-500'} animate-pulse mr-2`}></div>
@@ -503,17 +503,36 @@ export const ExercisePage = () => {
                 </div>
               )}
 
-              {/* Video Hướng Dẫn Placeholder */}
+              {/* Exercise instruction video */}
               <div className="bg-white dark:bg-gradient-to-br dark:from-gray-900 dark:to-gray-800 border border-gray-200 dark:border-gray-700 rounded-2xl p-6 shadow-xl transition-colors duration-300">
                 <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-4">Video Hướng Dẫn</h3>
-                <div className="bg-gray-200 dark:bg-black rounded-xl aspect-video flex items-center justify-center border border-gray-300 dark:border-gray-800 transition-colors duration-300">
-                  <div className="text-center">
+                <div className="bg-gray-200 dark:bg-black rounded-xl aspect-video flex items-center justify-center border border-gray-300 dark:border-gray-800 transition-colors duration-300 overflow-hidden">
+                  {selectedExercise ? (
+                    <video
+                      key={selectedExercise}
+                      controls
+                      className="w-full h-full object-contain"
+                      onError={(e) => {
+                        // Hide video element and show placeholder if video not found
+                        e.currentTarget.style.display = 'none';
+                        const placeholder = e.currentTarget.nextElementSibling;
+                        if (placeholder) {
+                          (placeholder as HTMLElement).style.display = 'flex';
+                        }
+                      }}
+                    >
+                      <source src={`/videos/${selectedExercise}.mp4`} type="video/mp4" />
+                      <source src={`/videos/${selectedExercise}.webm`} type="video/webm" />
+                      Trình duyệt của bạn không hỗ trợ video.
+                    </video>
+                  ) : null}
+                  <div className="text-center" style={{ display: selectedExercise ? 'none' : 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', width: '100%', height: '100%' }}>
                     <svg className="w-20 h-20 text-gray-400 dark:text-gray-600 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
                     <p className="text-gray-600 dark:text-gray-500 text-lg">
-                      Video hướng dẫn sẽ được thêm vào đây
+                      Chưa có video hướng dẫn cho bài tập này
                     </p>
                   </div>
                 </div>
@@ -524,12 +543,12 @@ export const ExercisePage = () => {
             <div className="lg:col-span-1">
               <div className="bg-white dark:bg-gradient-to-br dark:from-gray-900 dark:to-gray-800 border border-gray-200 dark:border-gray-700 rounded-2xl p-6 shadow-xl sticky top-24 transition-colors duration-300">
                 <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">Chọn Bài Tập</h2>
-                
+
                 <div className="space-y-4">
                   {exercises.map((exercise) => {
                     const details = exerciseDetails[exercise.id];
                     const isSelected = selectedExercise === exercise.id;
-                    
+
                     return (
                       <button
                         key={exercise.id}
@@ -603,7 +622,7 @@ export const ExercisePage = () => {
                         </span>
                       </div>
                       <div className="w-full bg-gray-300 dark:bg-gray-700 rounded-full h-2">
-                        <div 
+                        <div
                           className="bg-gradient-to-r from-teal-500 to-cyan-500 h-2 rounded-full transition-all duration-500"
                           style={{ width: `${personalizedParams.difficulty_score * 100}%` }}
                         ></div>
@@ -684,8 +703,8 @@ export const ExercisePage = () => {
                   </div>
                 )}
               </div>
-              <AngleDisplay 
-                angles={analysisData?.angles} 
+              <AngleDisplay
+                angles={analysisData?.angles}
                 exerciseType={selectedExercise || 'squat'}
                 isDetected={analysisData?.pose_detected || false}
               />
