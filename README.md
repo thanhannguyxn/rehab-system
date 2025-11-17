@@ -19,8 +19,16 @@ Hệ thống AI phục hồi chức năng hoàn chỉnh cho người cao tuổi 
 - ✅ Theo dõi lỗi thường gặp
 
 ## 🚀 Cài Đặt Nhanh (Windows)
-
-### Bước 1: Cài Backend
+### Bước 1: Setup Database
+Change username and password of your MySQL to your own in "check_db.py", "main.py", "manage_db.py" and "migrate_db.py":
+DB_CONFIG = {
+    "host": "localhost",
+    "user": "root", # use your MySQL username
+    "password": "ducanh", # use your MySQL password
+    "database": "rehab_v3"
+    }
+    
+### Bước 2: Cài Backend
 ```cmd
 cd backend
 python -m venv venv
@@ -31,7 +39,7 @@ python main.py
 ```
 ✅ Backend: http://localhost:8000
 
-### Bước 2: Cài Frontend
+### Bước 3: Cài Frontend
 ```cmd
 cd frontend
 npm install
@@ -39,7 +47,7 @@ npm run dev
 ```
 ✅ Frontend: http://localhost:3000
 
-### Bước 3: Đăng Nhập
+### Bước 4: Đăng Nhập
 - Bác sĩ: doctor1 / doctor123
 - Bệnh nhân: patient1 / patient123
 
