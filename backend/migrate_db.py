@@ -20,7 +20,7 @@ def migrate_database():
         conn = mysql.connector.connect(**DB_CONFIG)
         cursor = conn.cursor()
     except Error as e:
-        print(f"❌ Cannot connect to MySQL: {e}")
+        print(f" Cannot connect to MySQL: {e}")
         sys.exit(1)
 
     # Check if 'users' table exists
@@ -31,7 +31,7 @@ def migrate_database():
     """, (DB_CONFIG['database'],))
     users_table_exists = cursor.fetchone()[0] > 0
     if not users_table_exists:
-        print("⚠️ 'users' table not found — creating a minimal 'users' table.")
+        print(" 'users' table not found — creating a minimal 'users' table.")
         try:
             cursor.execute("""
                 CREATE TABLE IF NOT EXISTS users (
@@ -56,9 +56,9 @@ def migrate_database():
                 FOREIGN KEY (doctor_id) REFERENCES users(id)
             )
         """)
-            print("✅ Created 'users' table.")
+            print(" Created 'users' table.")
         except Error as e:
-            print(f"❌ Failed to create 'users' table: {e}")
+            print(f" Failed to create 'users' table: {e}")
             cursor.close()
             conn.close()
             sys.exit(1)
@@ -93,9 +93,9 @@ def migrate_database():
             # MySQL 8+ supports ADD COLUMN IF NOT EXISTS; using it for safety
             sql = f"ALTER TABLE `users` ADD COLUMN IF NOT EXISTS `{column_name}` {column_type}"
             cursor.execute(sql)
-            print(f"✅ Added column: {column_name} ({column_type})")
+            print(f" Added column: {column_name} ({column_type})")
         except Error as e:
-            print(f"⚠️ Failed to add column {column_name}: {e}")
+            print(f" Failed to add column {column_name}: {e}")
     
     # Create user_exercise_limits table if not exists
     try:
@@ -116,15 +116,15 @@ def migrate_database():
                 UNIQUE KEY ux_user_exercise (user_id, exercise_type)
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
         """)
-        print("✅ Created/verified user_exercise_limits table")
+        print(" Created/verified user_exercise_limits table")
     except Error as e:
-        print(f"⚠️ Failed to create/verify user_exercise_limits table: {e}")
+        print(f" Failed to create/verify user_exercise_limits table: {e}")
     
     conn.commit()
     cursor.close()
     conn.close()
     
-    print("\n🎉 Database migration completed successfully!")
+    print("\n Database migration completed successfully!")
 
 if __name__ == "__main__":
     print("=" * 60)
