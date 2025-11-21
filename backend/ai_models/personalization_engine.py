@@ -59,7 +59,7 @@ class PersonalizationEngine:
         if not baseline:
             return {
                 'error': f'Unknown exercise type: {exercise_type}',
-                'warnings': [f'⚠️ Bài tập "{exercise_type}" chưa được hỗ trợ'],
+                'warnings': [f' Bài tập "{exercise_type}" chưa được hỗ trợ'],
                 'recommendations': []
             }
         
@@ -246,34 +246,34 @@ class PersonalizationEngine:
         
         # High pain level warning
         if features['pain_level'] >= 7:
-            warnings.append("⚠️ Mức đau cao - Nên tham khảo bác sĩ trước khi tập")
-            warnings.append("⚠️ Có thể tạm dừng tập luyện cho đến khi đau giảm")
+            warnings.append(" Mức đau cao - Nên tham khảo bác sĩ trước khi tập")
+            warnings.append(" Có thể tạm dừng tập luyện cho đến khi đau giảm")
         
         # Obesity + knee exercises
         if features['bmi'] >= 30 and exercise_type in ['squat', 'single_leg_stand']:
-            warnings.append("⚠️ BMI cao - Hạn chế độ sâu để bảo vệ đầu gối")
-            warnings.append("⚠️ Nên tập trên bề mặt mềm (thảm tập)")
+            warnings.append(" BMI cao - Hạn chế độ sâu để bảo vệ đầu gối")
+            warnings.append(" Nên tập trên bề mặt mềm (thảm tập)")
         
         # Elderly + balance exercises
         if features['age'] >= 75 and exercise_type == 'single_leg_stand':
-            warnings.append("⚠️ Nên có người hoặc vật hỗ trợ khi tập đứng 1 chân")
-            warnings.append("⚠️ Tránh ngã - tập gần tường hoặc ghế")
+            warnings.append(" Nên có người hoặc vật hỗ trợ khi tập đứng 1 chân")
+            warnings.append(" Tránh ngã - tập gần tường hoặc ghế")
         
         # Exercise-specific medical warnings
         if features['has_knee_issues'] and exercise_type == 'squat':
-            warnings.append("⚠️ Có vấn đề đầu gối - Không gập quá sâu")
-            warnings.append("⚠️ Dừng ngay nếu cảm thấy đau đầu gối")
+            warnings.append(" Có vấn đề đầu gối - Không gập quá sâu")
+            warnings.append(" Dừng ngay nếu cảm thấy đau đầu gối")
         
         if features['has_shoulder_issues'] and exercise_type == 'arm_raise':
-            warnings.append("⚠️ Có vấn đề vai - Không nâng tay quá cao")
-            warnings.append("⚠️ Dừng ngay nếu cảm thấy đau vai")
+            warnings.append(" Có vấn đề vai - Không nâng tay quá cao")
+            warnings.append(" Dừng ngay nếu cảm thấy đau vai")
         
         if features['has_back_issues'] and exercise_type == 'squat':
-            warnings.append("⚠️ Có vấn đề lưng - Giữ lưng thẳng suốt bài tập")
+            warnings.append(" Có vấn đề lưng - Giữ lưng thẳng suốt bài tập")
         
         # Very easy difficulty warning
         if difficulty < 0.6:
-            warnings.append("💡 Bài tập đã được điều chỉnh dễ hơn phù hợp với bạn")
+            warnings.append(" Bài tập đã được điều chỉnh dễ hơn phù hợp với bạn")
         
         return warnings
     
@@ -283,46 +283,46 @@ class PersonalizationEngine:
         
         # Beginner recommendations
         if features['mobility_level_encoded'] == 0:
-            recommendations.append("💡 Bắt đầu chậm, tập trung vào tư thế đúng hơn là số lượng")
-            recommendations.append("💡 Có thể giảm số rep và tăng dần theo thời gian")
+            recommendations.append(" Bắt đầu chậm, tập trung vào tư thế đúng hơn là số lượng")
+            recommendations.append(" Có thể giảm số rep và tăng dần theo thời gian")
         
         # Age-based recommendations
         if features['age'] >= 65:
-            recommendations.append("💡 Khởi động kỹ 5-10 phút trước khi tập")
-            recommendations.append("💡 Nghỉ ngơi đầy đủ giữa các set")
-            recommendations.append("💡 Uống nước trước, trong và sau tập")
+            recommendations.append(" Khởi động kỹ 5-10 phút trước khi tập")
+            recommendations.append(" Nghỉ ngơi đầy đủ giữa các set")
+            recommendations.append(" Uống nước trước, trong và sau tập")
         
         # BMI-based recommendations
         if features['bmi'] >= 30:
-            recommendations.append("💡 Có thể chia nhỏ thành nhiều set ngắn")
-            recommendations.append("💡 Tập nhẹ nhưng đều đặn mỗi ngày")
+            recommendations.append(" Có thể chia nhỏ thành nhiều set ngắn")
+            recommendations.append(" Tập nhẹ nhưng đều đặn mỗi ngày")
         elif features['bmi'] < 18.5:
-            recommendations.append("💡 Kết hợp với dinh dưỡng tốt để tăng cường sức khỏe")
+            recommendations.append(" Kết hợp với dinh dưỡng tốt để tăng cường sức khỏe")
         
         # Exercise-specific recommendations
         if exercise_type == 'squat':
-            recommendations.append("💡 Giữ lưng thẳng, ngực dạng ra")
-            recommendations.append("💡 Đầu gối không vượt qua mũi chân")
+            recommendations.append(" Giữ lưng thẳng, ngực dạng ra")
+            recommendations.append(" Đầu gối không vượt qua mũi chân")
             if features['has_knee_issues']:
-                recommendations.append("💡 Có thể tập với ghế hỗ trợ phía sau")
+                recommendations.append(" Có thể tập với ghế hỗ trợ phía sau")
         
         elif exercise_type == 'arm_raise':
-            recommendations.append("💡 Giữ tay thẳng, không gập khuỷu tay")
-            recommendations.append("💡 Nâng và hạ tay đều đặn, không giật")
+            recommendations.append(" Giữ tay thẳng, không gập khuỷu tay")
+            recommendations.append(" Nâng và hạ tay đều đặn, không giật")
             if features['has_shoulder_issues']:
-                recommendations.append("💡 Dừng ở góc thoải mái, không ép quá mức")
+                recommendations.append(" Dừng ở góc thoải mái, không ép quá mức")
         
         elif exercise_type == 'calf_raise':
-            recommendations.append("💡 Nâng gót chân cao nhất có thể")
-            recommendations.append("💡 Giữ thăng bằng bằng cách đứng gần tường")
+            recommendations.append(" Nâng gót chân cao nhất có thể")
+            recommendations.append(" Giữ thăng bằng bằng cách đứng gần tường")
         
         elif exercise_type == 'single_leg_stand':
-            recommendations.append("💡 Tập gần tường hoặc ghế để hỗ trợ thăng bằng")
-            recommendations.append("💡 Tập luân phiên giữa hai chân")
+            recommendations.append(" Tập gần tường hoặc ghế để hỗ trợ thăng bằng")
+            recommendations.append(" Tập luân phiên giữa hai chân")
         
         # Pain management
         if features['pain_level'] > 0:
-            recommendations.append("💡 Dừng ngay nếu đau tăng lên trong khi tập")
-            recommendations.append("💡 Có thể chườm nóng trước tập và chườm lạnh sau tập")
+            recommendations.append(" Dừng ngay nếu đau tăng lên trong khi tập")
+            recommendations.append(" Có thể chườm nóng trước tập và chườm lạnh sau tập")
         
         return recommendations
