@@ -19,13 +19,13 @@ Hệ thống AI phục hồi chức năng hoàn chỉnh cho người cao tuổi 
 -  Theo dõi lỗi thường gặp
 
 ##  Cài Đặt Database (Windows)
-Follow this clip to install MySQL in your device (if necessary):
+- Follow this clip to install MySQL in your device (if necessary):
 https://www.youtube.com/watch?v=hiS_mWZmmI0
-Create database for MySQL:
+- Create database for MySQL:
 ```cmd
 Create database rehab_v3;
 ```   
-Change username and password of your MySQL to your own in "check_db.py", "main.py", "manage_db.py" and "migrate_db.py":
+- Change username and password of your MySQL to your own in "check_db.py", "main.py", "manage_db.py" and "migrate_db.py":
 ```cmd
 DB_CONFIG = {
     "host": "localhost",
