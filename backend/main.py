@@ -387,8 +387,8 @@ class AngleCalculator:
             }
 
             # Debug information
-            print(f"🦵 Left - Knee Flexion: {left_knee_flexion:.1f}°, Leg Behind: {left_leg_behind:.3f} {'✅RA SAU' if left_leg_behind > 0.05 else '❌RA TRƯỚC'}")
-            print(f"🦵 Right - Knee Flexion: {right_knee_flexion:.1f}°, Leg Behind: {right_leg_behind:.3f} {'✅RA SAU' if right_leg_behind > 0.05 else '❌RA TRƯỚC'}")
+            print(f" Left - Knee Flexion: {left_knee_flexion:.1f}°, Leg Behind: {left_leg_behind:.3f} {'RA SAU' if left_leg_behind > 0.05 else 'RA TRƯỚC'}")
+            print(f" Right - Knee Flexion: {right_knee_flexion:.1f}°, Leg Behind: {right_leg_behind:.3f} {'RA SAU' if right_leg_behind > 0.05 else 'RA TRƯỚC'}")
 
             return angles
 
@@ -559,9 +559,9 @@ class RepetitionCounter:
 
         # Debug information
         print(f" {self.current_side.upper()} side:")
-        print(f"   Knee Flexion: {knee_flexion:.1f}° ({'✅' if knee_bent_enough else '❌'} <50°)")
-        print(f"   Leg Behind: {leg_behind_value:.3f} ({'✅' if leg_behind else '❌'} >0.05)")
-        print(f"   Correct Position: {'✅ YES' if is_correct_position else '❌ NO'}")
+        print(f"   Knee Flexion: {knee_flexion:.1f}° ({'Right' if knee_bent_enough else 'Wrong'} <50°)")
+        print(f"   Leg Behind: {leg_behind_value:.3f} ({'Right' if leg_behind else 'Wrong'} >0.05)")
+        print(f"   Correct Position: {' YES' if is_correct_position else ' NO'}")
         
         # State machine
         if self.state == ExerciseState.READY:
@@ -885,7 +885,7 @@ class ErrorDetector:
                 # Show in real-time feedback only after 1.5s
                 errors.append({
                     'name': error_name,
-                    'message': f'❌ Gập gối sâu hơn! (hiện tại: {knee_flexion:.0f}°, cần: <50°)',
+                    'message': f' Gập gối sâu hơn! (hiện tại: {knee_flexion:.0f}°, cần: <50°)',
                     'severity': 'high'
                 })
         else:
@@ -901,7 +901,7 @@ class ErrorDetector:
                 # Show in real-time feedback only after 1.5s
                 errors.append({
                     'name': error_name,
-                    'message': f'⚠️ Đưa chân RA SAU, không ra trước! (hiện tại: {leg_behind_value:.3f}, cần: >0.05)',
+                    'message': f' Đưa chân RA SAU, không ra trước! (hiện tại: {leg_behind_value:.3f}, cần: >0.05)',
                     'severity': 'critical'
                 })
         else:
@@ -917,11 +917,11 @@ class ErrorDetector:
         left_elbow = angles.get('left_elbow', 180)
         right_elbow = angles.get('right_elbow', 180)
         
-        # ✅ CHECK CẢ 2 TAY - tay thấp nhất phải đủ cao
+        # CHECK CẢ 2 TAY - tay thấp nhất phải đủ cao
         shoulder_angle = min(left_shoulder, right_shoulder)
         elbow_angle = min(left_elbow, right_elbow)
         
-        # ✅ CHỈ CHECK LỖI Ở STATE UP (đã nâng xong)
+        # CHỈ CHECK LỖI Ở STATE UP (đã nâng xong)
         if state == ExerciseState.UP:
             # Error 1: Góc vai không đủ (CẢ 2 TAY phải cao)
             if shoulder_angle < 160:
@@ -933,7 +933,7 @@ class ErrorDetector:
                     # Show in real-time feedback only after 1.5s
                     errors.append({
                         'name': error_name,
-                        'message': f'❌ Nâng CẢ 2 TAY cao hơn! (thấp nhất: {shoulder_angle:.0f}°)',
+                        'message': f' Nâng CẢ 2 TAY cao hơn! (thấp nhất: {shoulder_angle:.0f}°)',
                         'severity': 'high'
                     })
             else:
@@ -949,7 +949,7 @@ class ErrorDetector:
                     # Show in real-time feedback only after 1.5s
                     errors.append({
                         'name': error_name,
-                        'message': '⚠️ Duỗi thẳng CẢ 2 TAY!',
+                        'message': ' Duỗi thẳng CẢ 2 TAY!',
                         'severity': 'medium'
                     })
             else:
@@ -959,7 +959,7 @@ class ErrorDetector:
             self._clear_error_timer('Góc vai chưa đủ')
             self._clear_error_timer('Tay không thẳng')
         
-        # ✅ CHECK Ở STATE DOWN (đã hạ xong)
+        # CHECK Ở STATE DOWN (đã hạ xong)
         if state == ExerciseState.DOWN:
             # Error 3: Chưa hạ hết tay
             if shoulder_angle > 90:
@@ -971,7 +971,7 @@ class ErrorDetector:
                     # Show in real-time feedback only after 1.5s
                     errors.append({
                         'name': error_name,
-                        'message': '⚠️ Hạ CẢ 2 TAY xuống hẳn!',
+                        'message': ' Hạ CẢ 2 TAY xuống hẳn!',
                         'severity': 'medium'
                     })
             else:
@@ -987,7 +987,7 @@ class ErrorDetector:
         
         left_knee = angles.get('left_knee', 180)
         right_knee = angles.get('right_knee', 180)
-        # ✅ CHECK CẢ 2 CHÂN - chân cao nhất (góc lớn nhất) phải đủ thấp
+        #  CHECK CẢ 2 CHÂN - chân cao nhất (góc lớn nhất) phải đủ thấp
         knee_angle = max(left_knee, right_knee)
         
         # Check ở state UP (gập gối xong)
@@ -1001,7 +1001,7 @@ class ErrorDetector:
                     # Show in real-time feedback only after 1.5s
                     errors.append({
                         'name': error_name,
-                        'message': f'❌ Gập CẢ 2 CHÂN sâu hơn! (cao nhất: {knee_angle:.0f}°)',
+                        'message': f' Gập CẢ 2 CHÂN sâu hơn! (cao nhất: {knee_angle:.0f}°)',
                         'severity': 'high'
                     })
             else:
@@ -1021,7 +1021,7 @@ class ErrorDetector:
                     # Show in real-time feedback only after 1.5s
                     errors.append({
                         'name': error_name,
-                        'message': '⚠️ Đứng thẳng CẢ 2 CHÂN!',
+                        'message': ' Đứng thẳng CẢ 2 CHÂN!',
                         'severity': 'medium'
                     })
             else:
@@ -1040,7 +1040,7 @@ class ErrorDetector:
         left_knee = angles.get('left_knee', 180)
         right_knee = angles.get('right_knee', 180)
         
-        # ✅ CHECK CẢ 2 CHÂN - chân thấp nhất phải đủ cao
+        # CHECK CẢ 2 CHÂN - chân thấp nhất phải đủ cao
         ankle_angle = min(left_ankle, right_ankle)
         knee_angle = min(left_knee, right_knee)
         
@@ -1056,7 +1056,7 @@ class ErrorDetector:
                     # Show in real-time feedback only after 1.5s
                     errors.append({
                         'name': error_name,
-                        'message': f'❌ Nâng CẢ 2 GÓT cao hơn! (thấp nhất: {ankle_angle:.0f}°)',
+                        'message': f' Nâng CẢ 2 GÓT cao hơn! (thấp nhất: {ankle_angle:.0f}°)',
                         'severity': 'high'
                     })
             else:
@@ -1072,7 +1072,7 @@ class ErrorDetector:
                     # Show in real-time feedback only after 1.5s
                     errors.append({
                         'name': error_name,
-                        'message': '⚠️ Giữ CẢ 2 CHÂN thẳng!',
+                        'message': ' Giữ CẢ 2 CHÂN thẳng!',
                         'severity': 'medium'
                     })
             else:
@@ -1094,7 +1094,7 @@ class ErrorDetector:
                     # Show in real-time feedback only after 1.5s
                     errors.append({
                         'name': error_name,
-                        'message': '⚠️ Hạ CẢ 2 GÓT xuống hẳn!',
+                        'message': ' Hạ CẢ 2 GÓT xuống hẳn!',
                         'severity': 'medium'
                     })
             else:
@@ -1105,7 +1105,7 @@ class ErrorDetector:
         
         return errors
     
-    # ✅ Xóa các methods không còn dùng
+    # Xóa các methods không còn dùng
     # _should_report_error và _cleanup_timers không còn cần thiết
 # ============= SESSION MANAGER =============
 
@@ -1113,7 +1113,7 @@ class SessionManager:
     def __init__(self):
         self.current_session = None
         self.frame_data = []
-        self.active_rep_counter: Optional[RepetitionCounter] = None  # ✅ Reference to active rep counter
+        self.active_rep_counter: Optional[RepetitionCounter] = None  # Reference to active rep counter
     
     def start_session(self, patient_id: int, exercise_name: str):
         conn = mysql.connector.connect(**DB_CONFIG)
@@ -1163,7 +1163,7 @@ class SessionManager:
         end_time = datetime.now()
         duration = (end_time - start_time).seconds
         
-        # ✅ GET ERROR SUMMARY FROM REP COUNTER (instead of counting frames)
+        # GET ERROR SUMMARY FROM REP COUNTER (instead of counting frames)
         error_counts = {}
         if self.active_rep_counter:
             error_summary = self.active_rep_counter.get_error_summary()
@@ -1177,22 +1177,22 @@ class SessionManager:
         # Calculate stats
         total_reps = self.active_rep_counter.rep_count if self.active_rep_counter else 0
         
-        # ✅ Calculate accuracy: Count reps with NO errors (empty error list)
+        # Calculate accuracy: Count reps with NO errors (empty error list)
         correct_reps = 0
         if self.active_rep_counter and self.active_rep_counter.all_rep_errors:
             # A rep is correct if its error list is EMPTY
             correct_reps = sum(1 for rep_errors in self.active_rep_counter.all_rep_errors if len(rep_errors) == 0)
             
             # Debug log
-            print(f"\n📊 SESSION SUMMARY:")
+            print(f"\n SESSION SUMMARY:")
             print(f"   Total reps: {total_reps}")
             print(f"   All rep errors: {self.active_rep_counter.all_rep_errors}")
             print(f"   Correct reps (no errors): {correct_reps}")
             for i, rep_errors in enumerate(self.active_rep_counter.all_rep_errors, 1):
                 if len(rep_errors) == 0:
-                    print(f"   Rep {i}: ✅ CORRECT (no errors)")
+                    print(f"   Rep {i}: CORRECT (no errors)")
                 else:
-                    print(f"   Rep {i}: ❌ ERRORS: {rep_errors}")
+                    print(f"   Rep {i}: ERRORS: {rep_errors}")
         
         accuracy = (correct_reps / total_reps * 100) if total_reps > 0 else 0
         
@@ -1224,7 +1224,7 @@ class SessionManager:
         
         self.current_session = None
         self.frame_data = []
-        self.active_rep_counter = None  # ✅ Clear reference
+        self.active_rep_counter = None  # Clear reference
         
         return result
 
@@ -1790,7 +1790,7 @@ async def websocket_endpoint(websocket: WebSocket, exercise_type: str):
     rep_counter = RepetitionCounter(exercise_type)
     error_detector = ErrorDetector(exercise_type)
     
-    # ✅ Store rep_counter reference in session_manager
+    # Store rep_counter reference in session_manager
     session_manager.active_rep_counter = rep_counter
     
     last_process_time = 0
@@ -1801,10 +1801,10 @@ async def websocket_endpoint(websocket: WebSocket, exercise_type: str):
             data = await websocket.receive_text()
             message = json.loads(data)
             
-            # ✅ NEW: Handle custom thresholds
+            # NEW: Handle custom thresholds
             if message['type'] == 'set_thresholds':
                 thresholds = message.get('thresholds', {})
-                print(f"🎯 Received custom thresholds: {thresholds}")
+                print(f" Received custom thresholds: {thresholds}")
                 
                 # Apply custom thresholds to rep_counter
                 if 'down_angle' in thresholds and thresholds['down_angle']:
@@ -1848,7 +1848,7 @@ async def websocket_endpoint(websocket: WebSocket, exercise_type: str):
                         landmarks = results.pose_landmarks.landmark
                         angles = angle_calc.get_angles(landmarks, exercise_type)
                         
-                        # ✅ GỌI update() thay vì count()
+                        # GỌI update() thay vì count()
                         rep_count = rep_counter.update(angles)
                         
                         # Reset error timers when new rep starts
@@ -1869,7 +1869,7 @@ async def websocket_endpoint(websocket: WebSocket, exercise_type: str):
                             for lm in landmarks
                         ]
                         
-                        # ✅ Feedback based on exercise type and state
+                        # Feedback based on exercise type and state
                         if errors:
                             feedback_msg = errors[0]['message']
                         else:
@@ -1877,53 +1877,53 @@ async def websocket_endpoint(websocket: WebSocket, exercise_type: str):
                                 # Special feedback for single leg stand
                                 if current_state == ExerciseState.READY:
                                     side_text = "trái" if rep_counter.get_current_side() == "left" else "phải"
-                                    feedback_msg = f'🟢 Sẵn sàng - Co chân {side_text} lên'
+                                    feedback_msg = f' Sẵn sàng - Co chân {side_text} lên'
                                 elif current_state == ExerciseState.LIFTING:
-                                    feedback_msg = '⬆️ Đang co chân lên...'
+                                    feedback_msg = ' Đang co chân lên...'
                                 elif current_state == ExerciseState.HOLDING:
                                     remaining = rep_counter.get_hold_time_remaining()
                                     if remaining:
-                                        feedback_msg = f'⏱️ Giữ vững! Còn {int(remaining)}s'
+                                        feedback_msg = f' Giữ vững! Còn {int(remaining)}s'
                                     else:
-                                        feedback_msg = '⏱️ Giữ vững!'
+                                        feedback_msg = ' Giữ vững!'
                                 elif current_state == ExerciseState.LOWERING:
-                                    feedback_msg = '⬇️ Hạ chân từ từ...'
+                                    feedback_msg = ' Hạ chân từ từ...'
                                 elif current_state == ExerciseState.SWITCH_SIDE:
-                                    feedback_msg = '🔄 Tốt lắm! Đổi bên'
+                                    feedback_msg = ' Tốt lắm! Đổi bên'
                                 elif current_state == ExerciseState.COMPLETE:
-                                    feedback_msg = '✅ Hoàn thành 1 rep!'
+                                    feedback_msg = ' Hoàn thành 1 rep!'
                                 else:
-                                    feedback_msg = '✓ Tư thế tốt!'
+                                    feedback_msg = ' Tư thế tốt!'
                             else:
                                 # Existing feedback for other exercises
                                 if current_state == ExerciseState.RAISING:
-                                    feedback_msg = '⬆️ Đang nâng...'
+                                    feedback_msg = ' Đang nâng...'
                                 elif current_state == ExerciseState.UP:
-                                    feedback_msg = '✅ Giữ vững!'
+                                    feedback_msg = ' Giữ vững!'
                                 elif current_state == ExerciseState.LOWERING:
-                                    feedback_msg = '⬇️ Đang hạ...'
+                                    feedback_msg = ' Đang hạ...'
                                 elif current_state == ExerciseState.DOWN:
-                                    feedback_msg = '🟢 Sẵn sàng!'
+                                    feedback_msg = ' Sẵn sàng!'
                                 else:
-                                    feedback_msg = '✓ Tư thế tốt!'
+                                    feedback_msg = ' Tư thế tốt!'
                         
-                        # ✅ Additional data for single_leg_stand
+                        # Additional data for single_leg_stand
                         extra_data = {}
                         if exercise_type == "single_leg_stand":
                             extra_data['hold_time_remaining'] = rep_counter.get_hold_time_remaining()
                             extra_data['current_side'] = rep_counter.get_current_side()
-                        # ✅ THÊM MỚI
+                        # THÊM MỚI
                         elif exercise_type == "calf_raise":
                             if current_state == ExerciseState.DOWN:
-                                feedback_msg = '🟢 Sẵn sàng - Nâng gót lên!'
+                                feedback_msg = ' Sẵn sàng - Nâng gót lên!'
                             elif current_state == ExerciseState.RAISING:
-                                feedback_msg = '⬆️ Đang nâng gót...'
+                                feedback_msg = ' Đang nâng gót...'
                             elif current_state == ExerciseState.UP:
-                                feedback_msg = '✅ Giữ vững ở trên!'
+                                feedback_msg = ' Giữ vững ở trên!'
                             elif current_state == ExerciseState.LOWERING:
-                                feedback_msg = '⬇️ Hạ từ từ...'
+                                feedback_msg = ' Hạ từ từ...'
                             else:
-                                feedback_msg = '✓ Tư thế tốt!'
+                                feedback_msg = ' Tư thế tốt!'
                         response = {
                             'type': 'analysis',
                             'pose_detected': True,
