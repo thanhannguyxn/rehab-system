@@ -15,7 +15,7 @@ from mysql.connector import Error
 DB_CONFIG = {
     "host": "localhost",
     "user": "root",
-    "password": "password",
+    "password": "123456",
     "database": "rehab_v3"
 }
 def clear_screen():

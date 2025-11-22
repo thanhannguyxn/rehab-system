@@ -69,7 +69,7 @@ export const Landing = () => {
 
           {/* Subtitle */}
           <p className="text-xl md:text-2xl text-gray-600 dark:text-gray-400 mb-12 max-w-3xl mx-auto leading-relaxed">
-            Theo dõi tập luyện tự động với AI. Không cần video. Chỉ cần camera và hệ thống sẽ đếm rep, phát hiện lỗi real-time.
+            Theo dõi tập luyện tự động với AI. Không cần video. Chỉ cần máy ảnh và hệ thống sẽ đếm số lần thực hiện, phát hiện lỗi ngay lập tức.
           </p>
 
           {/* CTA Buttons */}
@@ -85,7 +85,7 @@ export const Landing = () => {
               href="#how-it-works"
               className="bg-gray-200 dark:bg-gray-800 hover:bg-gray-300 dark:hover:bg-gray-700 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white px-8 py-4 rounded-xl font-bold text-lg transition"
             >
-              Xem Demo
+              Xem Hướng Dẫn
             </a>
           </div>
 
@@ -105,7 +105,7 @@ export const Landing = () => {
             </div>
             <div>
               <div className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-teal-500 to-cyan-500 dark:from-teal-400 dark:to-cyan-400 bg-clip-text text-transparent mb-1">
-                Real-time
+                Tức Thì
               </div>
               <div className="text-sm text-gray-500 dark:text-gray-500 font-medium">Phản Hồi</div>
             </div>
@@ -151,7 +151,7 @@ export const Landing = () => {
               </div>
               <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3">Phát Hiện Tự Động</h3>
               <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
-                AI tự động phát hiện bài tập và đếm rep mà không cần bạn nhập thủ công
+                AI tự động phát hiện bài tập và đếm số lần tập mà không cần bạn nhập thủ công
               </p>
             </div>
 
@@ -162,7 +162,7 @@ export const Landing = () => {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
                 </svg>
               </div>
-              <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3">Phản Hồi Real-time</h3>
+              <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3">Phản Hồi Tức Thì</h3>
               <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
                 Nhận cảnh báo ngay lập tức khi phát hiện tư thế không đúng
               </p>
@@ -245,7 +245,7 @@ export const Landing = () => {
                 </div>
                 <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">AI Theo Dõi</h3>
                 <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
-                  AI tự động đếm rep và phát hiện lỗi tư thế real-time
+                  AI tự động đếm số lần tập và phát hiện lỗi tư thế ngay lập tức
                 </p>
               </div>
             </div>

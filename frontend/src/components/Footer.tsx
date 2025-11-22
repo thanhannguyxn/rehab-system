@@ -10,7 +10,7 @@ const Footer: React.FC = () => {
           {/* Brand */}
           <div className="text-center md:text-left">
             <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-1">
-              Rehabilitation System
+              Hệ Thống Phục Hồi Chức Năng Rehab AI
             </h3>
             <p className="text-sm text-gray-600 dark:text-gray-400">
               Hệ thống phục hồi chức năng sử dụng AI để theo dõi và phân tích chuyển động,

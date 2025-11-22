@@ -11,7 +11,7 @@ from mysql.connector import Error
 DB_CONFIG = {
     "host": "localhost",
     "user": "root",
-    "password": "ducanh",
+    "password": "123456",
     "database": "rehab_v3"
 }
 def migrate_database():

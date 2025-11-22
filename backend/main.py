@@ -34,7 +34,7 @@ ALGORITHM = "HS256"
 DB_CONFIG = {
     "host": "localhost",
     "user": "root", # use your MySQL username
-    "password": "ducanh", # use your MySQL password
+    "password": "123456", # use your MySQL password
     "database": "rehab_v3"
     }
 
