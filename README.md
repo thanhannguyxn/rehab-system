@@ -1,4 +1,4 @@
-# Hệ Thống Phục Hồi Chức Năng V3 - Full Stack
+# Hệ Thống Phục Hồi Chức Năng Rehab AI - Full Stack
 
 Hệ thống AI phục hồi chức năng hoàn chỉnh cho người cao tuổi với MediaPipe Pose tracking.
 
