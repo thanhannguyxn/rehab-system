@@ -27,13 +27,7 @@ export const AngleDisplay = ({ angles, exerciseType, isDetected }: AngleDisplayP
     }
   };
 
-  const getStatusIcon = (angle: number, target: number, direction: 'up' | 'down') => {
-    const isGood = direction === 'up' ? angle >= target : angle <= target;
-    const isClose = direction === 'up' 
-      ? angle >= target - 20 && angle < target
-      : angle <= target + 20 && angle > target;
-    return isGood ? '✅' : isClose ? '⚠️' : '❌';
-  };
+
 
   // Determine which angles to display based on exercise type
   const angleConfigs: Array<{ key: string; label: string; target: number; direction: 'up' | 'down' }> = [];
@@ -62,11 +56,11 @@ export const AngleDisplay = ({ angles, exerciseType, isDetected }: AngleDisplayP
   return (
     <div className="bg-white dark:bg-gray-900 rounded-lg p-6 shadow-md border border-gray-200 dark:border-gray-700">
       <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
-        📐 Góc Khớp
+        Góc Khớp
       </h3>
 
       {!isDetected ? (
-        // ✅ Hiển thị khi chưa detect được người
+        // Hiển thị khi chưa detect được người
         <div className="text-center py-8">
           <div className="text-6xl mb-4">🎥</div>
           <p className="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-2">
@@ -80,7 +74,6 @@ export const AngleDisplay = ({ angles, exerciseType, isDetected }: AngleDisplayP
         // Đang detect nhưng chưa có angles
         <div className="text-center py-8">
           <div className="animate-pulse">
-            <div className="text-4xl mb-4">⏳</div>
             <p className="text-lg text-gray-700 dark:text-gray-300">Đang phân tích...</p>
           </div>
         </div>
@@ -91,7 +84,6 @@ export const AngleDisplay = ({ angles, exerciseType, isDetected }: AngleDisplayP
             const angleValue = angles[config.key] || 0;
             const colorClass = getAngleColor(angleValue, config.target, config.direction);
             const progress = getProgressPercent(angleValue, config.target, config.direction);
-            const status = getStatusIcon(angleValue, config.target, config.direction);
 
             return (
               <div key={config.key} className="space-y-2">
@@ -100,7 +92,7 @@ export const AngleDisplay = ({ angles, exerciseType, isDetected }: AngleDisplayP
                     {config.label}
                   </span>
                   <span className={`text-2xl font-bold px-3 py-1 rounded-lg ${colorClass}`}>
-                    {Math.round(angleValue)}° {status}
+                    {Math.round(angleValue)}°
                   </span>
                 </div>
                 
@@ -129,7 +121,7 @@ export const AngleDisplay = ({ angles, exerciseType, isDetected }: AngleDisplayP
             {/* Tip */}
             <div className="mt-6 pt-4 border-t border-gray-200 dark:border-gray-700">
             <p className="text-sm text-gray-700 dark:text-gray-400 italic">
-                💡 {exerciseType === 'arm_raise' 
+                {exerciseType === 'arm_raise' 
                 ? 'Nâng tay thẳng lên cao, giữ khuỷu tay thẳng'
                 : exerciseType === 'squat'
                 ? 'Gập gối xuống sâu, giữ lưng thẳng'
