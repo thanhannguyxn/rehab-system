@@ -545,10 +545,10 @@ export const ExercisePage = () => {
                           }
                         }}
                         src={
-                          selectedExercise === 'squat' ? '/IMG_1140.MOV' :
-                          selectedExercise === 'arm_raise' ? '/IMG_1141.MOV' :
-                          selectedExercise === 'calf_raise' ? '/IMG_1144.MOV' :
-                          selectedExercise === 'single_leg_stand' ? '/IMG_1142.MOV' :
+                          selectedExercise === 'squat' ? '/squat.mp4' :
+                          selectedExercise === 'arm_raise' ? '/arm_raise.mp4' :
+                          selectedExercise === 'calf_raise' ? '/calf_raise.mp4' :
+                          selectedExercise === 'single_leg_stand' ? '/single_leg_stand.mp4' :
                           ''
                         }
                         onError={(e) => {
