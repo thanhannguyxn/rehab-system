@@ -1,6 +1,6 @@
-# 📝 Hướng Dẫn Sử Dụng User Profile & AI Personalization
+# Hướng Dẫn Sử Dụng User Profile & AI Personalization
 
-## 🎯 Tổng Quan
+## Tổng Quan
 
 Hệ thống **AI Personalization** đã được tích hợp hoàn toàn vào ứng dụng Rehab System. Người dùng có thể:
 - Cập nhật thông tin cá nhân (tuổi, chiều cao, cân nặng, bệnh lý)
@@ -9,7 +9,7 @@ Hệ thống **AI Personalization** đã được tích hợp hoàn toàn vào �
 
 ---
 
-## 🚀 Cách Sử Dụng
+## Cách Sử Dụng
 
 ### **Bước 1: Đăng Nhập**
 
@@ -25,43 +25,43 @@ Hệ thống **AI Personalization** đã được tích hợp hoàn toàn vào �
 1. Sau khi đăng nhập, click vào **"Thông Tin"** trên navbar
 2. Điền các thông tin:
 
-#### **📋 Thông Tin Cơ Bản:**
+#### **Thông Tin Cơ Bản:**
 - **Tuổi**: Nhập tuổi của bạn (ví dụ: 72)
 - **Giới tính**: Chọn Nam/Nữ/Khác
 - **Chiều cao**: Nhập chiều cao (cm) - ví dụ: 155
 - **Cân nặng**: Nhập cân nặng (kg) - ví dụ: 58
 
-💡 **Hệ thống sẽ tự động tính BMI** và hiển thị phân loại:
+**Hệ thống sẽ tự động tính BMI** và hiển thị phân loại:
 - Thiếu cân: BMI < 18.5
 - Bình thường: BMI 18.5-24.9
 - Thừa cân: BMI 25-29.9
 - Béo phì: BMI ≥ 30
 
-#### **🏥 Tình Trạng Sức Khỏe:**
+#### **Tình Trạng Sức Khỏe:**
 Chọn các vấn đề sức khỏe hiện tại:
-- ☑️ Viêm khớp gối
-- ☑️ Đau vai
-- ☑️ Đau lưng
-- ☑️ Loãng xương
-- ☑️ Tiểu đường
-- ☑️ Bệnh tim
-- ☑️ Cao huyết áp
-- ☑️ Phục hồi sau đột quỵ
+- Viêm khớp gối
+- Đau vai
+- Đau lưng
+- Loãng xương
+- Tiểu đường
+- Bệnh tim
+- Cao huyết áp
+- Phục hồi sau đột quỵ
 
-#### **🎯 Mức Độ Vận Động:**
+#### **Mức Độ Vận Động:**
 Chọn khả năng di chuyển hiện tại:
-- 🌱 **Mới bắt đầu**: Ít vận động
-- 🚶 **Trung bình**: Vận động vừa phải
-- 🏃 **Nâng cao**: Vận động tốt
+- **Mới bắt đầu**: Ít vận động
+- **Trung bình**: Vận động vừa phải
+- **Nâng cao**: Vận động tốt
 
-#### **😔 Mức Độ Đau:**
+#### **Mức Độ Đau:**
 Kéo thanh trượt từ 0-10:
 - 0: Không đau
 - 5: Đau vừa
 - 10: Rất đau
 
-3. Click **"💾 Lưu Thông Tin"**
-4. Thấy thông báo: **"✅ Cập nhật thông tin thành công!"**
+3. Click **"Lưu Thông Tin"**
+4. Thấy thông báo: **"Cập nhật thông tin thành công!"**
 
 ### **Bước 3: Nhận Bài Tập Cá Nhân Hóa**
 
@@ -74,7 +74,7 @@ Kéo thanh trượt từ 0-10:
 
 ---
 
-## 📊 Ví Dụ Thực Tế
+## Ví Dụ Thực Tế
 
 ### **Case 1: Bà Lan - 72 tuổi, viêm khớp gối**
 
@@ -92,22 +92,22 @@ Mức độ đau: 4/10
 
 **Output (Squat):**
 ```
-🎯 Góc mục tiêu: 125° - 160° (thay vì 90° - 160°)
+Góc mục tiêu: 125° - 160° (thay vì 90° - 160°)
    → Gập gối nông hơn để bảo vệ khớp
 
-🔢 Số rep khuyến nghị: 8 (thay vì 20)
+Số rep khuyến nghị: 8 (thay vì 20)
    → Ít hơn để tránh mệt mỏi
 
-⏱️ Thời gian nghỉ: 60s (thay vì 30s)
+Thời gian nghỉ: 60s (thay vì 30s)
    → Nghỉ lâu hơn để hồi phục
 
-📊 Độ khó: 49% (dễ hơn 51% so với người khỏe mạnh)
+Độ khó: 49% (dễ hơn 51% so với người khỏe mạnh)
 
-⚠️ Cảnh báo:
+Cảnh báo:
    • Có vấn đề đầu gối - Không gập quá sâu
    • Nên tập với ghế hỗ trợ
 
-💡 Khuyến nghị:
+Khuyến nghị:
    • Khởi động kỹ 5-10 phút trước khi tập
    • Nghỉ ngơi đầy đủ giữa các set
    • Uống nước trước, trong và sau tập
@@ -131,20 +131,20 @@ Mức độ đau: 0/10
 
 **Output (Squat):**
 ```
-🎯 Góc mục tiêu: 105° - 160°
+Góc mục tiêu: 105° - 160°
    → Gập ít để giảm áp lực lên gối
 
-🔢 Số rep khuyến nghị: 12
+Số rep khuyến nghị: 12
 
-⏱️ Thời gian nghỉ: 40s
+Thời gian nghỉ: 40s
 
-📊 Độ khó: 68%
+Độ khó: 68%
 
-⚠️ Cảnh báo:
+Cảnh báo:
    • BMI cao - Hạn chế độ sâu để bảo vệ đầu gối
    • Nên tập trên bề mặt mềm (thảm tập)
 
-💡 Khuyến nghị:
+Khuyến nghị:
    • Bắt đầu chậm, tập trung vào tư thế đúng
    • Có thể chia nhỏ thành nhiều set ngắn
    • Tập nhẹ nhưng đều đặn mỗi ngày
@@ -167,24 +167,24 @@ Mức độ đau: 0/10
 
 **Output (Squat):**
 ```
-🎯 Góc mục tiêu: 90° - 160°
+Góc mục tiêu: 90° - 160°
    → Tiêu chuẩn bình thường
 
-🔢 Số rep khuyến nghị: 20
+Số rep khuyến nghị: 20
 
-⏱️ Thời gian nghỉ: 30s
+Thời gian nghỉ: 30s
 
-📊 Độ khó: 100% (bình thường)
+Độ khó: 100% (bình thường)
 
-⚠️ Cảnh báo: Không có
+Cảnh báo: Không có
 
-💡 Khuyến nghị:
+Khuyến nghị:
    • Giữ lưng thẳng, đầu gối không vượt qua mũi chân
 ```
 
 ---
 
-## 🎨 Giao Diện User Profile
+## Giao Diện User Profile
 
 ### **Màn Hình Chính:**
 ```
@@ -195,7 +195,7 @@ Mức độ đau: 0/10
 │  Cập nhật thông tin để nhận được bài tập phù hợp │
 │                                                   │
 │  ┌───────────────────────────────────────────┐  │
-│  │ 👤 Thông Tin Cơ Bản                       │  │
+│  │ Thông Tin Cơ Bản                          │  │
 │  │                                            │  │
 │  │  Tuổi *         [    72     ]             │  │
 │  │  Giới tính *    [▼ Nữ      ]             │  │
@@ -209,7 +209,7 @@ Mức độ đau: 0/10
 │  └───────────────────────────────────────────┘  │
 │                                                   │
 │  ┌───────────────────────────────────────────┐  │
-│  │ 🏥 Tình Trạng Sức Khỏe                    │  │
+│  │ Tình Trạng Sức Khỏe                       │  │
 │  │                                            │  │
 │  │  ☑ Viêm khớp gối    ☐ Đau vai            │  │
 │  │  ☐ Đau lưng         ☑ Loãng xương        │  │
@@ -217,21 +217,21 @@ Mức độ đau: 0/10
 │  └───────────────────────────────────────────┘  │
 │                                                   │
 │  ┌───────────────────────────────────────────┐  │
-│  │ 🎯 Mức Độ Vận Động & Đau Đớn             │  │
+│  │ Mức Độ Vận Động & Đau Đớn                │  │
 │  │                                            │  │
-│  │  🌱 Mới bắt đầu  🚶 Trung bình  🏃 Nâng cao│  │
+│  │  Mới bắt đầu  Trung bình  Nâng cao        │  │
 │  │                                            │  │
 │  │  Mức độ đau hiện tại: 4/10                │  │
 │  │  [━━━━━━━━━━━━━━━━━○━━━━━━━━]           │  │
 │  └───────────────────────────────────────────┘  │
 │                                                   │
-│  [ 💾 Lưu Thông Tin ]  [ Hủy ]                  │
+│  [ Lưu Thông Tin ]  [ Hủy ]                     │
 └─────────────────────────────────────────────────┘
 ```
 
 ---
 
-## 🔧 Troubleshooting
+## Troubleshooting
 
 ### **Q: Tôi không thấy nút "Thông Tin" trên navbar?**
 **A:** Chỉ có bệnh nhân (patient) mới thấy. Bác sĩ (doctor) không có trang này.
@@ -262,19 +262,19 @@ Mức độ đau: 0/10
 
 ---
 
-## 📱 Screenshots
+## Screenshots
 
 ### **1. User Profile Form**
 ```
 [Xem screenshot tại frontend khi truy cập http://localhost:3001/profile]
 
 Features:
-- ✅ Dark/Light mode support
-- ✅ Real-time BMI calculation
-- ✅ Visual pain level slider (0-10)
-- ✅ Checkbox grid cho medical conditions
-- ✅ Radio cards cho mobility level
-- ✅ Responsive design (mobile-friendly)
+- Dark/Light mode support
+- Real-time BMI calculation
+- Visual pain level slider (0-10)
+- Checkbox grid cho medical conditions
+- Radio cards cho mobility level
+- Responsive design (mobile-friendly)
 ```
 
 ### **2. Exercise Page với Personalized Params**
@@ -291,16 +291,16 @@ Features:
 
 ---
 
-## 🎯 Next Steps
+## Next Steps
 
-### **✅ Đã Hoàn Thành:**
+### **Đã Hoàn Thành:**
 1. Backend API endpoints
 2. AI Personalization Engine
 3. User Profile Form UI
 4. Navbar integration
 5. Dark/Light mode support
 
-### **⏳ Cần Làm Tiếp:**
+### **Cần Làm Tiếp:**
 1. **Display Personalized Params trong Exercise Page** (20 phút)
    - Load params khi chọn exercise
    - Hiển thị warnings/recommendations
@@ -318,7 +318,7 @@ Features:
 
 ---
 
-## 🧪 Test Scenarios
+## Test Scenarios
 
 ### **Scenario 1: Người Cao Tuổi**
 ```
@@ -373,7 +373,7 @@ Expected Output (Squat):
 
 ---
 
-## 📚 Resources
+## Resources
 
 ### **API Documentation:**
 - Swagger UI: http://localhost:8000/docs
@@ -391,7 +391,7 @@ Expected Output (Squat):
 
 ---
 
-## 📞 Support
+## Support
 
 Nếu gặp vấn đề, hãy:
 1. Kiểm tra console log (F12 trong browser)
@@ -405,30 +405,30 @@ Nếu gặp vấn đề, hãy:
 
 ---
 
-## ✨ Features Highlights
+## Features Highlights
 
-### **🤖 AI-Powered**
+### **AI-Powered**
 - Rule-based algorithm với 5 factors
 - Tự động điều chỉnh dựa trên profile
 - Học được patterns từ multiple conditions
 
-### **🎨 User-Friendly**
+### **User-Friendly**
 - Intuitive form design
 - Real-time BMI calculation
 - Visual pain level slider
 - Dark/Light mode support
 
-### **⚡ Real-Time**
+### **Real-Time**
 - Instant BMI update
 - Fast API response (<100ms)
 - Smooth UI transitions
 
-### **🔒 Safe & Secure**
+### **Safe & Secure**
 - Medical data encrypted
 - JWT authentication
 - HTTPS ready
 
-### **📊 Data-Driven**
+### **Data-Driven**
 - Evidence-based thresholds
 - WHO BMI standards
 - ACSM exercise guidelines

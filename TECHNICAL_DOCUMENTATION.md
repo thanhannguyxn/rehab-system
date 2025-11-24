@@ -54,7 +54,7 @@
 
 ---
 
-## 🗄️ Database Schema
+## Database Schema
 
 ### **users Table (Updated)**
 ```sql
@@ -403,7 +403,7 @@ async def get_personalized_params(
 
 ---
 
-## 💻 Frontend Implementation
+## Frontend Implementation
 
 ### **File Structure**
 ```
@@ -511,7 +511,7 @@ const getLinkClasses = (path: string) => {
 
 ---
 
-## 📡 API Reference
+## API Reference
 
 ### **Base URL**
 ```
@@ -620,7 +620,7 @@ Errors:
 
 ---
 
-## 🧮 AI Algorithm Details
+## AI Algorithm Details
 
 ### **Factor Weights**
 ```python
@@ -761,7 +761,7 @@ pytest tests/test_api.py::test_get_personalized_params
 
 ---
 
-## 🚀 Deployment
+## Deployment
 
 ### **Environment Variables**
 ```bash

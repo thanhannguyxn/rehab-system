@@ -1,4 +1,4 @@
-# 🔊 Voice Guidance System
+# Voice Guidance System
 
 ## Tổng quan
 Hệ thống hướng dẫn giọng nói tự động giúp người dùng (đặc biệt là người cao tuổi) thực hiện bài tập chính xác mà không cần nhìn màn hình liên tục.
@@ -51,7 +51,7 @@ Chỉ đọc lỗi sau khi phát hiện lỗi **liên tục trong 1.5 giây** (g
 
 ### Cách mở Voice Settings:
 1. Vào trang **Exercise**
-2. Click nút **🔊 Cài Đặt Giọng Nói**
+2. Click nút **Cài Đặt Giọng Nói**
 
 ### Các tùy chọn:
 - **Bật/Tắt**: Toggle switch để bật/tắt giọng nói
@@ -84,11 +84,11 @@ Chỉ đọc lỗi sau khi phát hiện lỗi **liên tục trong 1.5 giây** (g
 
 | Browser | Support | Note |
 |---------|---------|------|
-| Chrome 33+ | ✅ Excellent | Giọng Việt tốt nhất |
-| Edge 14+ | ✅ Excellent | Giọng Windows TTS |
-| Firefox 49+ | ⚠️ Limited | Giọng robotic hơn |
-| Safari 7+ | ⚠️ Limited | iOS có thể hạn chế |
-| Opera 21+ | ✅ Good | Dùng Chromium engine |
+| Chrome 33+ | Excellent | Giọng Việt tốt nhất |
+| Edge 14+ | Excellent | Giọng Windows TTS |
+| Firefox 49+ | Limited | Giọng robotic hơn |
+| Safari 7+ | Limited | iOS có thể hạn chế |
+| Opera 21+ | Good | Dùng Chromium engine |
 
 ## Kiến trúc Code
 
@@ -154,6 +154,3 @@ frontend/src/
 - Kiểm tra speaker/headphone
 
 ---
-
-**Developed with ❤️ for elderly health**  
-© 2025 Rehab AI

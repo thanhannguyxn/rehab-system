@@ -1326,10 +1326,10 @@ async def register(request: RegisterRequest):
 async def get_exercises(current_user = Depends(get_current_user)):
     return {
         "exercises": [
-            {"id": "squat", "name": "Squat (Gập gối)", "description": "Bài tập tăng cường cơ chân", "target_reps": 16, "duration_seconds": 180},
-            {"id": "arm_raise", "name": "Nâng Tay", "description": "Bài tập vai và tay", "target_reps": 12, "duration_seconds": 120},
+            {"id": "squat", "name": "Squat (Gập gối)", "description": "Bài tập tăng cường cơ chân", "target_reps": 16, "duration_seconds": 600},
+            {"id": "arm_raise", "name": "Nâng Tay", "description": "Bài tập vai và tay", "target_reps": 12, "duration_seconds": 300},
             {"id": "single_leg_stand", "name": "Đứng 1 Chân", "description": "Bài tập cân bằng và cơ chân", "target_reps": 10, "duration_seconds": 300},
-            {"id": "calf_raise", "name": "Nâng Gót Chân", "description": "Bài tập tăng cường cơ bắp chân", "target_reps": 12, "duration_seconds": 150}
+            {"id": "calf_raise", "name": "Nâng Gót Chân", "description": "Bài tập tăng cường cơ bắp chân", "target_reps": 12, "duration_seconds": 300}
         ]
     }
 

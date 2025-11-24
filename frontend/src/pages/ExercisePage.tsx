@@ -528,33 +528,75 @@ export const ExercisePage = () => {
                 <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-4">Video Hướng Dẫn</h3>
                 <div className="bg-gray-200 dark:bg-black rounded-xl aspect-video flex items-center justify-center border border-gray-300 dark:border-gray-800 transition-colors duration-300 overflow-hidden">
                   {selectedExercise ? (
-                    <video
-                      key={selectedExercise}
-                      controls
-                      className="w-full h-full object-contain"
-                      onError={(e) => {
-                        // Hide video element and show placeholder if video not found
-                        e.currentTarget.style.display = 'none';
-                        const placeholder = e.currentTarget.nextElementSibling;
-                        if (placeholder) {
-                          (placeholder as HTMLElement).style.display = 'flex';
+                    <>
+                      <video
+                        key={selectedExercise}
+                        controls
+                        loop
+                        autoPlay
+                        muted
+                        playsInline
+                        className="w-full h-full object-contain"
+                        onVolumeChange={(e) => {
+                          // Force muted to always be true
+                          const video = e.currentTarget;
+                          if (!video.muted) {
+                            video.muted = true;
+                          }
+                        }}
+                        src={
+                          selectedExercise === 'squat' ? '/IMG_1140.MOV' :
+                          selectedExercise === 'arm_raise' ? '/IMG_1141.MOV' :
+                          selectedExercise === 'calf_raise' ? '/IMG_1144.MOV' :
+                          selectedExercise === 'single_leg_stand' ? '/IMG_1142.MOV' :
+                          ''
                         }
-                      }}
-                    >
-                      <source src={`/videos/${selectedExercise}.mp4`} type="video/mp4" />
-                      <source src={`/videos/${selectedExercise}.webm`} type="video/webm" />
-                      Trình duyệt của bạn không hỗ trợ video.
-                    </video>
-                  ) : null}
-                  <div className="text-center" style={{ display: selectedExercise ? 'none' : 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', width: '100%', height: '100%' }}>
-                    <svg className="w-20 h-20 text-gray-400 dark:text-gray-600 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                    <p className="text-gray-600 dark:text-gray-500 text-lg">
-                      Chưa có video hướng dẫn cho bài tập này
-                    </p>
-                  </div>
+                        onError={(e) => {
+                          // Only show placeholder if video truly cannot be loaded
+                          const video = e.currentTarget;
+                          if (video.networkState === HTMLMediaElement.NETWORK_NO_SOURCE) {
+                            console.error('Video file not found for exercise:', selectedExercise);
+                            video.style.display = 'none';
+                            const placeholder = video.parentElement?.querySelector('.video-placeholder');
+                            if (placeholder) {
+                              (placeholder as HTMLElement).style.display = 'flex';
+                            }
+                          }
+                        }}
+                        onLoadedData={(e) => {
+                          console.log('Video loaded successfully for:', selectedExercise);
+                          // Make sure video is visible and placeholder is hidden
+                          const video = e.currentTarget;
+                          video.style.display = 'block';
+                          const placeholder = video.parentElement?.querySelector('.video-placeholder');
+                          if (placeholder) {
+                            (placeholder as HTMLElement).style.display = 'none';
+                          }
+                        }}
+                      >
+                        Trình duyệt của bạn không hỗ trợ video.
+                      </video>
+                      <div className="video-placeholder text-center" style={{ display: 'none', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', width: '100%', height: '100%', position: 'absolute' }}>
+                        <svg className="w-20 h-20 text-gray-400 dark:text-gray-600 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        <p className="text-gray-600 dark:text-gray-500 text-lg">
+                          Chưa có video hướng dẫn cho bài tập này
+                        </p>
+                      </div>
+                    </>
+                  ) : (
+                    <div className="text-center" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', width: '100%', height: '100%' }}>
+                      <svg className="w-20 h-20 text-gray-400 dark:text-gray-600 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      </svg>
+                      <p className="text-gray-600 dark:text-gray-500 text-lg">
+                        Chọn bài tập để xem video hướng dẫn
+                      </p>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>

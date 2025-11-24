@@ -40,7 +40,7 @@ DB_CONFIG = {
 ```cmd
 cd backend
 python -m venv venv
-venv\Scripts\activate
+venv\Scripts\activate (source venv/Scripts/activate if using git bash)
 pip install -r requirements.txt
 python migrate_db.py 
 python main.py
