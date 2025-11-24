@@ -88,7 +88,6 @@ media/
 backend/uploads/
 
 # Videos/Images lớn
-*.mp4
 *.avi
 *.mov
 *.mkv
