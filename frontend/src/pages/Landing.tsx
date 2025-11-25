@@ -82,7 +82,9 @@ export const Landing = () => {
               <span className="inline-block ml-2 group-hover:translate-x-1 transition-transform">→</span>
             </button>
             <a
-              href="#how-it-works"
+              href="https://www.youtube.com/watch?v=srit68t8LGs&t=34s"
+              target="_blank"
+              rel="noopener noreferrer"
               className="bg-gray-200 dark:bg-gray-800 hover:bg-gray-300 dark:hover:bg-gray-700 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white px-8 py-4 rounded-xl font-bold text-lg transition"
             >
               Xem Hướng Dẫn
