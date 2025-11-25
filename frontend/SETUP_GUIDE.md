@@ -1,12 +1,12 @@
-# 🚀 HƯỚNG DẪN SETUP HOÀN CHỈNH - REHAB V3
+# HƯỚNG DẪN SETUP HOÀN CHỈNH - REHAB V3
 
-## 📋 TỔNG QUAN
+## TỔNG QUAN
 
 Project này gồm 2 phần:
-1. **Backend V3** - FastAPI + MediaPipe + SQLite
-2. **Frontend V3** - React + TypeScript + Tailwind
+1. **Backend** - FastAPI + MediaPipe + SQLite
+2. **Frontend** - React + TypeScript + Tailwind
 
-## 🎯 YÊU CẦU HỆ THỐNG
+## YÊU CẦU HỆ THỐNG
 
 - Python 3.8+
 - Node.js 18+
@@ -16,7 +16,7 @@ Project này gồm 2 phần:
 
 ---
 
-## 🔧 PHẦN 1: SETUP BACKEND
+## PHẦN 1: SETUP BACKEND
 
 ### Bước 1: Tạo thư mục và file backend
 
@@ -75,12 +75,12 @@ python main.py
 **Kết quả:**
 ```
 ============================================================
-🚀 Rehab System V3 - Full Features
+Rehab System V3 - Full Features
 ============================================================
-📡 Server: http://localhost:8000
-📚 Docs: http://localhost:8000/docs
+Server: http://localhost:8000
+Docs: http://localhost:8000/docs
 
-👤 Default Accounts:
+Default Accounts:
    Doctor: doctor1 / doctor123
    Patient: patient1 / patient123
 ============================================================
@@ -99,7 +99,7 @@ curl -X POST http://localhost:8000/api/auth/login \
 
 ---
 
-## 💻 PHẦN 2: SETUP FRONTEND
+## PHẦN 2: SETUP FRONTEND
 
 ### Bước 1: Di chuyển folder frontend
 
@@ -154,8 +154,8 @@ npm run dev
 ```
 VITE v5.0.8  ready in 500 ms
 
-➜  Local:   http://localhost:5173/
-➜  Network: use --host to expose
+Local:   http://localhost:5173/
+Network: use --host to expose
 ```
 
 ### Bước 5: Mở Browser
@@ -166,7 +166,7 @@ Bạn sẽ thấy trang Login!
 
 ---
 
-## 🎮 PHẦN 3: TEST TOÀN BỘ HỆ THỐNG
+## PHẦN 3: TEST TOÀN BỘ HỆ THỐNG
 
 ### Test 1: Login Bệnh Nhân
 
@@ -205,7 +205,7 @@ Bạn sẽ thấy trang Login!
 
 ---
 
-## 🔍 TROUBLESHOOTING
+## TROUBLESHOOTING
 
 ### Backend Issues
 
@@ -267,7 +267,7 @@ server: {
 
 ---
 
-## 📦 DEPLOYMENT
+## DEPLOYMENT
 
 ### Backend Deployment
 
@@ -303,7 +303,7 @@ npm run build
 
 ---
 
-## 🎯 CHECKLIST HOÀN THÀNH
+## CHECKLIST HOÀN THÀNH
 
 ### Backend
 - [ ] Python 3.8+ installed
@@ -336,7 +336,7 @@ npm run build
 
 ---
 
-## 📞 SUPPORT COMMANDS
+## SUPPORT COMMANDS
 
 ### Start Everything (Full Stack)
 
@@ -375,24 +375,22 @@ npm run dev
 
 ---
 
-## 🎉 KẾT QUẢ CUỐI CÙNG
+## KẾT QUẢ CUỐI CÙNG
 
 Khi setup thành công, bạn sẽ có:
 
-✅ Backend API đầy đủ chức năng
-✅ Frontend UI đẹp, senior-friendly
-✅ Real-time pose tracking với MediaPipe
-✅ Session management với database
-✅ Patient dashboard với charts
-✅ Doctor dashboard với analytics
-✅ PDF report generation
-✅ Full authentication system
-
-**Project hoàn chỉnh và sẵn sàng demo! 🚀**
+- Backend API đầy đủ chức năng
+- Frontend UI đẹp, senior-friendly
+- Real-time pose tracking với MediaPipe
+- Session management với database
+- Patient dashboard với charts
+- Doctor dashboard với analytics
+- PDF report generation
+- Full authentication system
 
 ---
 
-## 📖 NEXT STEPS
+## NEXT STEPS
 
 1. Thêm exercise types mới
 2. Customize UI colors
@@ -401,6 +399,3 @@ Khi setup thành công, bạn sẽ có:
 5. Add video recording
 6. Deploy to production
 
----
-
-**Happy Coding! 💪**
