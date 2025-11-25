@@ -1,6 +1,6 @@
-# 🛠️ Technical Documentation - AI Personalization System
+# Technical Documentation - AI Personalization System
 
-## 📋 Table of Contents
+## Table of Contents
 1. [Architecture Overview](#architecture-overview)
 2. [Database Schema](#database-schema)
 3. [Backend Implementation](#backend-implementation)
@@ -12,7 +12,7 @@
 
 ---
 
-## 🏗️ Architecture Overview
+## Architecture Overview
 
 ```
 ┌─────────────────────────────────────────────────────────┐
@@ -131,7 +131,7 @@ INSERT INTO user_exercise_limits VALUES (
 
 ---
 
-## 🔧 Backend Implementation
+## Backend Implementation
 
 ### **File Structure**
 ```
@@ -689,7 +689,7 @@ if has_knee_issues and exercise == 'squat':
 
 ---
 
-## 🧪 Testing Guide
+## Testing Guide
 
 ### **Unit Tests (Backend)**
 ```python

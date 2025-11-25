@@ -85,7 +85,6 @@ export const ErrorAnalytics = ({ patientId }: ErrorAnalyticsProps) => {
   return (
     <div className="bg-gradient-to-br from-white to-teal-50 p-6 rounded-xl shadow-lg">
       <h3 className="text-2xl font-bold text-gray-800 mb-6 flex items-center gap-2">
-        <span className="text-3xl">📊</span>
         Lỗi Thường Gặp Theo Bài Tập
       </h3>
       
@@ -207,7 +206,6 @@ export const ErrorAnalytics = ({ patientId }: ErrorAnalyticsProps) => {
       {currentExercise && currentExercise.errors.length > 0 && (
         <div>
           <h4 className="font-semibold text-lg mb-4 flex items-center gap-2">
-            <span className="text-2xl">📋</span>
             Chi tiết lỗi
           </h4>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

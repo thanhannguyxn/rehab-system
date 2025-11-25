@@ -3,7 +3,7 @@ import type { PoseAngles } from '../types';
 interface AngleDisplayProps {
   angles?: PoseAngles;
   exerciseType: string;
-  isDetected: boolean; // ✅ THÊM: Biết có detect được người không
+  isDetected: boolean; // THÊM: Biết có detect được người không
 }
 
 export const AngleDisplay = ({ angles, exerciseType, isDetected }: AngleDisplayProps) => {
@@ -78,7 +78,7 @@ export const AngleDisplay = ({ angles, exerciseType, isDetected }: AngleDisplayP
           </div>
         </div>
       ) : (
-        // ✅ Hiển thị angles
+        // Hiển thị angles
         <div className="space-y-4">
           {angleConfigs.map((config) => {
             const angleValue = angles[config.key] || 0;
@@ -127,7 +127,7 @@ export const AngleDisplay = ({ angles, exerciseType, isDetected }: AngleDisplayP
                 ? 'Gập gối xuống sâu, giữ lưng thẳng'
                 : exerciseType === 'single_leg_stand'
                 ? 'Nâng đầu gối cao, giữ thăng bằng, nhìn thẳng phía trước'
-                : exerciseType === 'calf_raise'  // ✅ THÊM MỚI
+                : exerciseType === 'calf_raise' 
                 ? 'Nâng gót cao lên, giữ chân thẳng, hạ từ từ'
                 : ''
                 }

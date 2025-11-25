@@ -1,24 +1,24 @@
-# 🏥 Hệ Thống Phục Hồi Chức Năng V3
+# Hệ Thống Phục Hồi Chức Năng V3
 
 Hệ thống AI phục hồi chức năng cho người cao tuổi với MediaPipe Pose tracking, JWT authentication, và role-based access.
 
-## 🎯 Tính Năng
+## Tính Năng
 
-### 👤 Cho Bệnh Nhân
-- ✅ Tập luyện với AI tracking real-time
-- ✅ Xem lịch sử buổi tập
-- ✅ Biểu đồ tiến độ cá nhân
-- ✅ Phân tích lỗi thường gặp
-- ✅ UI thân thiện người cao tuổi (font lớn, màu tương phản cao)
+### Cho Bệnh Nhân
+- Tập luyện với AI tracking real-time
+- Xem lịch sử buổi tập
+- Biểu đồ tiến độ cá nhân
+- Phân tích lỗi thường gặp
+- UI thân thiện người cao tuổi (font lớn, màu tương phản cao)
 
-### 🏥 Cho Bác Sĩ
-- ✅ Dashboard xem tất cả bệnh nhân
-- ✅ Xem chi tiết tiến độ từng bệnh nhân
-- ✅ Biểu đồ và phân tích
-- ✅ Xuất báo cáo PDF
-- ✅ Theo dõi lỗi thường gặp của bệnh nhân
+### Cho Bác Sĩ
+- Dashboard xem tất cả bệnh nhân
+- Xem chi tiết tiến độ từng bệnh nhân
+- Biểu đồ và phân tích
+- Xuất báo cáo PDF
+- Theo dõi lỗi thường gặp của bệnh nhân
 
-## 🛠 Tech Stack
+## Tech Stack
 
 **Backend:**
 - FastAPI
@@ -36,7 +36,7 @@ Hệ thống AI phục hồi chức năng cho người cao tuổi với MediaPip
 - jsPDF (xuất PDF)
 - Axios
 
-## 📦 Cài Đặt
+## Cài Đặt
 
 ### Backend
 
@@ -76,7 +76,7 @@ npm run dev
 
 Frontend sẽ chạy tại: http://localhost:3000
 
-## 👥 Tài Khoản Mặc Định
+## Tài Khoản Mặc Định
 
 **Bác sĩ:**
 - Username: `doctor1`
@@ -86,15 +86,15 @@ Frontend sẽ chạy tại: http://localhost:3000
 - Username: `patient1`
 - Password: `patient123`
 
-## 🎨 UI/UX Guidelines
+## UI/UX Guidelines
 
 ### Senior-Friendly Design
-- ✅ Base font: 18px minimum
-- ✅ Buttons: 60px+ height
-- ✅ High contrast colors
-- ✅ Simple navigation
-- ✅ Clear visual feedback
-- ✅ Large clickable areas
+- Base font: 18px minimum
+- Buttons: 60px+ height
+- High contrast colors
+- Simple navigation
+- Clear visual feedback
+- Large clickable areas
 
 ### Color Scheme
 - Primary: Blue 600 (#2563eb)
@@ -102,7 +102,7 @@ Frontend sẽ chạy tại: http://localhost:3000
 - Warning: Yellow 600 (#ca8a04)
 - Danger: Red 600 (#dc2626)
 
-## 📁 Cấu Trúc Project
+## Cấu Trúc Project
 
 ```
 rehab-v3/
@@ -137,7 +137,7 @@ rehab-v3/
     └── package.json
 ```
 
-## 🔧 API Endpoints
+## API Endpoints
 
 ### Authentication
 - `POST /api/auth/login` - Đăng nhập
@@ -158,7 +158,7 @@ rehab-v3/
 ### WebSocket
 - `WS /ws/exercise/{type}` - Real-time tracking
 
-## 🎮 Workflow
+## Workflow
 
 ### Patient Flow:
 1. Login → Patient Dashboard
@@ -175,7 +175,7 @@ rehab-v3/
 4. Xem biểu đồ và phân tích lỗi
 5. Xuất báo cáo PDF
 
-## 🐛 Troubleshooting
+## Troubleshooting
 
 **Port đã được sử dụng:**
 ```bash
@@ -197,7 +197,7 @@ lsof -ti:8000 | xargs kill -9
 - Kiểm tra proxy config trong vite.config.ts
 - Xem console logs để debug
 
-## 📝 Database
+## Database
 
 Database tự động khởi tạo khi chạy backend lần đầu.
 
@@ -218,7 +218,7 @@ rm rehab_v3.db
 python main.py
 ```
 
-## 🚀 Build cho Production
+## Build cho Production
 
 ### Frontend
 ```bash
@@ -230,7 +230,7 @@ Sẽ tạo folder `dist/` với static files.
 ### Backend
 Đảm bảo đổi `SECRET_KEY` trong `main.py` trước khi deploy!
 
-## 📊 Features Checklist
+## Features Checklist
 
 - [x] JWT Authentication
 - [x] Role-based access (Patient/Doctor)
@@ -245,7 +245,7 @@ Sẽ tạo folder `dist/` với static files.
 - [x] Senior-friendly UI
 - [x] Responsive design
 
-## 💡 Future Enhancements
+## Future Enhancements
 
 - [ ] Exercise recommendations based on performance
 - [ ] Video recording of sessions
@@ -256,7 +256,7 @@ Sẽ tạo folder `dist/` với static files.
 - [ ] Real-time doctor monitoring
 - [ ] Group sessions
 
-## 📞 Support
+## Support
 
 Có vấn đề? Kiểm tra:
 1. Backend logs
@@ -264,10 +264,8 @@ Có vấn đề? Kiểm tra:
 3. Network tab trong DevTools
 4. Database file exists
 
-## 📄 License
+## License
 
 MIT License - Tự do sử dụng và chỉnh sửa!
 
----
 
-**Made with ❤️ for helping elderly people with rehabilitation**
