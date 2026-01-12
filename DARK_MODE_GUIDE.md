@@ -1,17 +1,17 @@
-# 🌓 Hướng Dẫn Dark Mode / Light Mode
+# Hướng Dẫn Dark Mode / Light Mode
 
-## ✅ Đã Hoàn Thành
+## Đã Hoàn Thành
 
 Hệ thống Dark Mode đã được tích hợp đầy đủ vào ứng dụng với các tính năng:
 
-### 🎨 Tính Năng
-- ✅ **Toggle Button**: Nút chuyển đổi theme ở góc trên navbar
-- ✅ **Lưu Preference**: Theme được lưu vào localStorage (không mất khi reload)
-- ✅ **Smooth Transition**: Chuyển đổi mượt mà với animation 300ms
-- ✅ **Full Support**: Tất cả trang đã hỗ trợ cả 2 theme
-- ✅ **Default Dark**: Mặc định mở ứng dụng sẽ là Dark Mode
+### Tính Năng
+-  **Toggle Button**: Nút chuyển đổi theme ở góc trên navbar
+-  **Lưu Preference**: Theme được lưu vào localStorage (không mất khi reload)
+-  **Smooth Transition**: Chuyển đổi mượt mà với animation 300ms
+-  **Full Support**: Tất cả trang đã hỗ trợ cả 2 theme
+-  **Default Dark**: Mặc định mở ứng dụng sẽ là Dark Mode
 
-### 📁 Các File Đã Cập Nhật
+### Các File Đã Cập Nhật
 
 #### 1. **ThemeContext.tsx** (MỚI)
 ```
@@ -25,7 +25,7 @@ frontend/src/context/ThemeContext.tsx
 ```
 frontend/src/components/ThemeToggle.tsx
 ```
-- Nút toggle với icon mặt trời (☀️) / mặt trăng (🌙)
+- Nút toggle với icon mặt trời / mặt trăng 
 - Có tooltip và accessible
 
 #### 3. **tailwind.config.js**
@@ -41,17 +41,17 @@ darkMode: 'class', // Thêm dòng này
 ```
 
 #### 5. **Pages đã cập nhật**
-- ✅ `Landing.tsx` - Trang chủ với full dark/light support
-- ✅ `Login.tsx` - Form đăng nhập
-- ✅ `LoginChoice.tsx` - Chọn loại tài khoản
-- ✅ `ExercisePage.tsx` - Trang danh sách bài tập
+-  `Landing.tsx` - Trang chủ với full dark/light support
+-  `Login.tsx` - Form đăng nhập
+-  `LoginChoice.tsx` - Chọn loại tài khoản
+-  `ExercisePage.tsx` - Trang danh sách bài tập
 
-## 🎯 Cách Sử Dụng
+## Cách Sử Dụng
 
 ### Cho User:
 1. Mở ứng dụng
-2. Nhìn lên góc trên navbar, tìm nút có icon ☀️ hoặc 🌙
-3. Click vào nút để chuyển đổi Dark ↔️ Light
+2. Nhìn lên góc trên navbar, tìm nút có icon Light hoặc Dark
+3. Click vào nút để chuyển đổi Dark sang Light
 4. Theme sẽ được lưu tự động, lần sau vào sẽ giữ nguyên
 
 ### Cho Developer:
@@ -78,7 +78,7 @@ export const MyComponent = () => {
 - Dark mode class sau với `dark:` prefix: `dark:bg-gray-900`
 - Tailwind tự động switch dựa vào class `dark` trên `<html>`
 
-## 🎨 Color Scheme
+## Color Scheme
 
 ### Light Mode
 - Background: `bg-white`, `bg-gray-50`, `bg-gray-100`
@@ -92,7 +92,7 @@ export const MyComponent = () => {
 - Borders: `dark:border-gray-700`, `dark:border-gray-800`
 - Gradients: Teal/Cyan với opacity thấp hơn
 
-## 🔧 Troubleshooting
+## Troubleshooting
 
 ### Theme không lưu sau khi reload?
 - Check localStorage trong DevTools
@@ -106,7 +106,7 @@ export const MyComponent = () => {
 - Check xem `ThemeToggle` đã được import vào navbar chưa
 - Phải wrap app trong `<ThemeProvider>`
 
-## 📝 TODO (Nếu cần mở rộng)
+## TODO (Nếu cần mở rộng)
 
 - [ ] Thêm dark mode cho Dashboard (Doctor/Patient)
 - [ ] Thêm dark mode cho Exercise.tsx (trang tập luyện)
@@ -114,13 +114,11 @@ export const MyComponent = () => {
 - [ ] Custom theme colors (không chỉ dark/light)
 - [ ] System preference detection (`prefers-color-scheme`)
 
-## 🎉 Kết Quả
+## Kết Quả
 
 Bây giờ ứng dụng của bạn đã có:
-- ✅ Dark Mode đầy đủ
-- ✅ Light Mode đầy đủ
-- ✅ Toggle button dễ dùng
-- ✅ Lưu preference tự động
-- ✅ UI đẹp cả 2 theme
-
-**Enjoy your new dark mode! 🌙✨**
+-  Dark Mode đầy đủ
+-  Light Mode đầy đủ
+-  Toggle button dễ dùng
+-  Lưu preference tự động
+-  UI đẹp cả 2 theme
